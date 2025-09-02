@@ -294,7 +294,6 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Action Buttons */}
       {isEditing && (
         <div className="flex justify-end gap-2">
           <button

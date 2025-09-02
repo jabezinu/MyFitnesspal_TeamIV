@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import { generateExerciseDatabase } from "../../lib/admin"

@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 
-// StatsCard Component
+
 const StatsCard = ({ title, value, goal, progress, color }) => (
   <div className="bg-card rounded-lg border p-6 relative overflow-hidden">
     <div className={`absolute top-0 right-0 w-16 h-16 bg-${color}/10 rounded-full -mr-8 -mt-8`}></div>
     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
       <h3 className="text-sm font-medium">{title}</h3>
       <svg className={`h-4 w-4 text-${color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        {/* SVG path here */}
+       
       </svg>
     </div>
     <div>
@@ -22,7 +22,7 @@ const StatsCard = ({ title, value, goal, progress, color }) => (
   </div>
 );
 
-// ActionCard Component
+
 const ActionCard = ({ title, description, to, imgSrc, color }) => (
   <div className="bg-card rounded-lg border hover:shadow-md transition-shadow cursor-pointer overflow-hidden">
     <Link to={to} className="block">
@@ -33,7 +33,7 @@ const ActionCard = ({ title, description, to, imgSrc, color }) => (
       <div className="p-6">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-2">
           <svg className={`h-5 w-5 text-${color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {/* SVG path here */}
+            
           </svg>
           {title}
         </h3>

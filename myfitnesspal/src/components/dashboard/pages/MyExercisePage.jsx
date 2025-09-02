@@ -76,7 +76,6 @@ export const MyExercisesPage = () => {
     equipment: [],
   });
 
-  // Mock custom exercises (in real app, these would come from database)
   const [customExercises, setCustomExercises] = useState([
     {
       id: "custom-1",

@@ -1,7 +1,6 @@
-"use client"
 
 import { useState, useEffect } from "react"
-import { generateUserData } from "../../lib/admin"; // Updated path
+import { generateUserData } from "../../lib/admin";
 
 export const UserManagementPage = () => {
   const [users, setUsers] = useState([])

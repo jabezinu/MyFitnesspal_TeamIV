@@ -8,7 +8,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo / About */}
           <div>
-            <h2 className="text-2xl font-bold text-white">SofiFitness</h2>
+            <h2 className="text-2xl font-bold text-white">MyFitnessPall</h2>
             <p className="mt-4 text-gray-400 text-sm">
               Your trusted platform for fitness, health, and lifestyle guidance.  
               Stay consistent, stay strong, stay motivated!
