@@ -1,43 +1,74 @@
-
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { generateUserData } from "../../lib/admin";
 
 export const UserManagementPage = () => {
-  const [users, setUsers] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [currentPage, setCurrentPage] = useState(1)
-  const usersPerPage = 10
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
+
+  const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    status: "active",
+    joinDate: new Date().toISOString().split("T")[0],
+    lastActive: new Date().toISOString().split("T")[0],
+    totalCalories: 0,
+    totalWorkouts: 0,
+  });
 
   useEffect(() => {
-    setUsers(generateUserData())
-  }, [])
+    setUsers(generateUserData());
+  }, []);
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || user.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || user.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
-  const startIndex = (currentPage - 1) * usersPerPage
-  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage)
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
   const handleDeleteUser = (userId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      setUsers(users.filter((user) => user.id !== userId))
+      setUsers(users.filter((user) => user.id !== userId));
     }
-  }
+  };
 
   const handleToggleStatus = (userId) => {
     setUsers(
       users.map((user) =>
-        user.id === userId ? { ...user, status: user.status === "active" ? "inactive" : "active" } : user,
-      ),
-    )
-  }
+        user.id === userId ? { ...user, status: user.status === "active" ? "inactive" : "active" } : user
+      )
+    );
+  };
+
+  const handleAddUser = (e) => {
+    e.preventDefault();
+
+    const user = {
+      id: `user_${Date.now()}`,
+      ...newUser,
+    };
+
+    setUsers([user, ...users]);
+    setNewUser({
+      name: "",
+      email: "",
+      status: "active",
+      joinDate: new Date().toISOString().split("T")[0],
+      lastActive: new Date().toISOString().split("T")[0],
+      totalCalories: 0,
+      totalWorkouts: 0,
+    });
+    setShowAddUserForm(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -66,6 +97,51 @@ export const UserManagementPage = () => {
           <option value="inactive">Inactive</option>
         </select>
       </div>
+
+      {/* Add New User Button */}
+      <button
+        onClick={() => setShowAddUserForm(!showAddUserForm)}
+        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+      >
+        {showAddUserForm ? "Cancel" : "Add New User"}
+      </button>
+
+      {/* Add User Form */}
+      {showAddUserForm && (
+        <div className="bg-card rounded-lg border p-6 mt-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Add New User</h3>
+          <form onSubmit={handleAddUser} className="grid gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">Name</label>
+              <input
+                type="text"
+                required
+                value={newUser.name}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">Email</label>
+              <input
+                type="email"
+                required
+                value={newUser.email}
+                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+              />
+            </div>
+            <div className="md:col-span-2 flex space-x-3">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+              >
+                Add User
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div className="bg-card rounded-lg border overflow-hidden">
         <div className="overflow-x-auto">
@@ -171,5 +247,5 @@ export const UserManagementPage = () => {
         </div>
       )}
     </div>
-  )
+  );
 }

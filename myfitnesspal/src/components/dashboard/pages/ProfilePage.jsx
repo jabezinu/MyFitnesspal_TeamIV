@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "./../../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -18,7 +18,7 @@ const ProfilePage = () => {
     activityLevel: "moderate",
     fitnessGoal: "weight-loss",
     bio: "Passionate about fitness and healthy living!",
-    photo: "/sofi.png", 
+    photo: "/professional-fitness-avatar-person.png", 
   });
 
   useEffect(() => {
@@ -294,6 +294,7 @@ const ProfilePage = () => {
         </div>
       </div>
 
+      {/* Action Buttons */}
       {isEditing && (
         <div className="flex justify-end gap-2">
           <button

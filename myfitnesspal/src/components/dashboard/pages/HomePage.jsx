@@ -22,11 +22,10 @@ const StatsCard = ({ title, value, goal, progress, color }) => (
   </div>
 );
 
-
 const ActionCard = ({ title, description, to, imgSrc, color }) => (
   <div className="bg-card rounded-lg border hover:shadow-md transition-shadow cursor-pointer overflow-hidden">
     <Link to={to} className="block">
-      <div className={`h-32 bg-gradient-to-br from-${color}/5 to-${color}/15 relative`}>
+      <div className={`h-50 bg-gradient-to-br from-${color}/5 to-${color}/15 relative`}>
         <img src={imgSrc} alt={`${title} tracking`} className="w-full h-full object-cover opacity-80" />
         <div className={`absolute inset-0 bg-${color}/10`}></div>
       </div>
@@ -76,7 +75,7 @@ export const HomePage = () => {
         <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 <div className="w-full flex flex-col items-center text-center py-10">
   <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-    Welcome back, {user?.name?.split(" ")[0]}! 🌟
+    Welcome again, {user?.name?.split(" ")[0]}! 🌟
   </h1>
 
   <p className="text-muted-foreground flex items-center gap-2 mt-2">
@@ -100,11 +99,11 @@ export const HomePage = () => {
 
           <div className="flex gap-2">
   <Link
-    to="/checkin" // Ensure this is correct
+    to="/checkin" 
     className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
   >
     <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      {/* SVG path here */}
+     
     </svg>
     Quick Check-in
   </Link>
@@ -112,18 +111,25 @@ export const HomePage = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 h-30 m-5">
+        <StatsCard title="Calories Burned" value={stats.caloriesBurned} goal="Today's exercise" progress={100} color="orange-500" />
         <StatsCard title="Calories Remaining" value={Math.max(caloriesRemaining, 0)} goal={stats.caloriesGoal} progress={caloriesProgress} color="primary" />
         <StatsCard title="Weight Progress" value={`${stats.currentWeight} kg`} goal={`${stats.weightGoal} kg`} progress={((stats.currentWeight - stats.weightGoal) / stats.currentWeight) * 100} color="secondary" />
-        <StatsCard title="Calories Burned" value={stats.caloriesBurned} goal="Today's exercise" progress={100} color="orange-500" />
+        
         <StatsCard title="Water Intake" value={`${stats.waterIntake}/${stats.waterGoal}`} goal="Glasses today" progress={waterProgress} color="blue-500" />
+        <StatsCard title="Go to report" />
+        <StatsCard title="Admin" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 m-5 h-75">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 m-5 h-75">
+         <ActionCard title="Log profile" description="You Can go and  edit your profile by clicking here" to="/profile" imgSrc="/download.jpg" color="primary" />
         <ActionCard title="Log Food" description="Add meals and track your nutrition" to="/food" imgSrc="/healthy-food-fruits-vegetables-nutrition.png" color="green" />
         <ActionCard title="Log Exercise" description="Record your workouts and activities" to="/exercises" imgSrc="/fitness-exercise-workout-gym-equipment.png" color="primary" /> 
-        <ActionCard title="Edit profile" description="You Can edit your profile by clicking here" to="/profile" imgSrc="/download.jpg" color="primary" />
-        <ActionCard title="Edit Goal" description="You Can edit your goal by clicking here" to="/goals" imgSrc="/fitness-goals-target-achievement-success.png" color="primary" />
+       
+        <ActionCard title="Log Goal" description="You Can go to goalPage by clicking here" to="/goals" imgSrc="/fitness-goals-target-achievement-success.png" color="primary" />
+        <ActionCard title="Log report" description="You Can go to your reportPage by clicking here" to="/reports" imgSrc="/reports.jpg" color="primary" />
+        <ActionCard title="Are you admin?" description="Are you admin? " to="/admin" imgSrc="/achievement-trophy-icon.png
+        " color="primary" />
       </div>
 
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-8 relative overflow-hidden">

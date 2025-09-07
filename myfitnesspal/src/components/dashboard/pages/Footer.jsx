@@ -23,13 +23,13 @@ export const Footer = () => {
                 <a href="/" className="hover:text-blue-400 transition">Home</a>
               </li>
               <li>
-                <a href="/about" className="hover:text-blue-400 transition">About Us</a>
+                <a href="/" className="hover:text-blue-400 transition">About Us</a>
               </li>
               <li>
-                <a href="/services" className="hover:text-blue-400 transition">Services</a>
+                <a href="/" className="hover:text-blue-400 transition">Services</a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-blue-400 transition">Contact</a>
+                <a href="/" className="hover:text-blue-400 transition">Contact</a>
               </li>
             </ul>
           </div>
@@ -38,16 +38,16 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="hover:text-blue-500 text-2xl">
+              <a href="#" target="_blank" rel="noreferrer" className="hover:text-blue-500 text-2xl">
                 <FaFacebook />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-sky-400 text-2xl">
+              <a href="#" target="_blank" rel="noreferrer" className="hover:text-sky-400 text-2xl">
                 <FaTwitter />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-pink-500 text-2xl">
+              <a href="#" target="_blank" rel="noreferrer" className="hover:text-pink-500 text-2xl">
                 <FaInstagram />
               </a>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-gray-100 text-2xl">
+              <a href="#" target="_blank" rel="noreferrer" className="hover:text-gray-100 text-2xl">
                 <FaGithub />
               </a>
             </div>

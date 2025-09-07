@@ -1,8 +1,8 @@
 
 
 import { useState, useEffect } from "react"
-import { generateExerciseDatabase } from "../../lib/admin"
-{/*import { generateFoodDatabase } from "../../../lib/admin"*/}
+import { generateFoodDatabase } from "../../lib/admin"
+
 
 export const FoodManagementPage = () => {
   const [foods, setFoods] = useState([])
@@ -20,7 +20,7 @@ export const FoodManagementPage = () => {
   })
 
   useEffect(() => {
-    setFoods(generateExerciseDatabase())
+    setFoods(generateFoodDatabase())
   }, [])
 
   const filteredFoods = foods.filter((food) => {
@@ -239,13 +239,16 @@ export const FoodManagementPage = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-foreground">
-                      <div>{food.calories} cal</div>
-                      <div className="text-muted-foreground">
-                        P: {food.protein}g | C: {food.carbs}g | F: {food.fat}g
-                      </div>
-                    </div>
-                  </td>
+  <div className="text-sm text-foreground">
+    <div className="font-semibold">{food.calories} Calories</div>
+    <div className="text-muted-foreground">
+      <strong>Nutrients:</strong> 
+      <span className="font-medium"> {food.protein}g Protein</span> | 
+      <span className="font-medium"> {food.carbs}g Carbs</span> | 
+      <span className="font-medium"> {food.fat}g Fat</span>
+    </div>
+  </div>
+</td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${

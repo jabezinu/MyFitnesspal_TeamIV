@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react"
-import { generateExerciseDatabase } from "../../lib/admin"; // Updated path
+import { generateExerciseDatabase } from "../../lib/admin"; 
 
 export const ExerciseManagementPage = () => {
   const [exercises, setExercises] = useState([])

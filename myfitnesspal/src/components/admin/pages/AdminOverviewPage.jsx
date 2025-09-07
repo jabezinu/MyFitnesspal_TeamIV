@@ -1,28 +1,28 @@
-
-
-import { useState, useEffect } from "react"
-import { generateSystemStats } from "../../lib/admin"; // Updated path
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { generateSystemStats } from "../../lib/admin";
 
 export const AdminOverviewPage = () => {
-  const [stats, setStats] = useState({})
+  const [stats, setStats] = useState({});
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    setStats(generateSystemStats())
-  }, [])
+    setStats(generateSystemStats());
+  }, []);
 
   const statCards = [
     { name: "Total Users", value: stats.totalUsers?.toLocaleString(), change: "+12%", changeType: "positive" },
     { name: "Active Users", value: stats.activeUsers?.toLocaleString(), change: "+8%", changeType: "positive" },
     { name: "Total Foods", value: stats.totalFoods?.toLocaleString(), change: "+5%", changeType: "positive" },
     { name: "Total Exercises", value: stats.totalExercises?.toLocaleString(), change: "+3%", changeType: "positive" },
-  ]
+  ];
 
   const activityCards = [
     { name: "Calories Logged", value: stats.totalCaloriesLogged?.toLocaleString(), unit: "total" },
     { name: "Workouts Logged", value: stats.totalWorkoutsLogged?.toLocaleString(), unit: "total" },
     { name: "Daily Active Users", value: stats.avgDailyActiveUsers?.toLocaleString(), unit: "average" },
     { name: "New Users This Month", value: stats.newUsersThisMonth?.toLocaleString(), unit: "this month" },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -115,20 +115,29 @@ export const AdminOverviewPage = () => {
       <div className="bg-card rounded-lg border p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
         <div className="grid gap-4 md:grid-cols-3">
-          <button className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors">
+          <button
+            onClick={() => navigate("/admin/users")}
+            className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
+          >
             <h4 className="font-medium text-foreground">Manage Users</h4>
             <p className="text-sm text-muted-foreground mt-1">View and manage user accounts</p>
           </button>
-          <button className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors">
+          <button
+            onClick={() => navigate("/admin/foods")}
+            className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
+          >
             <h4 className="font-medium text-foreground">Update Database</h4>
             <p className="text-sm text-muted-foreground mt-1">Add or modify food and exercise data</p>
           </button>
-          <button className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors">
+          <button
+            onClick={() => navigate("/admin/analytics")}
+            className="p-4 text-left border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
+          >
             <h4 className="font-medium text-foreground">View Analytics</h4>
             <p className="text-sm text-muted-foreground mt-1">Analyze user behavior and app performance</p>
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

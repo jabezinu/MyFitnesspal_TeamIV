@@ -3,25 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { foodService } from "../../lib/food"; {/*
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
-import { Button } from "../../ui/button";
-import { Progress } from "../../ui/progress";
-import { Badge } from "../../ui/badge"; */}
-import {
-  Apple,
-  Plus,
-  Calendar,
-  Flame,
-  ChevronLeft,
-  ChevronRight,
-  Coffee,
-  Sun,
-  Moon,
-  Cookie,
-  Edit,
-  Trash2,
-} from "lucide-react";
+import { foodService } from "../../lib/food";
+import { Apple, Calendar, Flame, ChevronLeft, ChevronRight, Coffee, Sun, Moon, Cookie } from "lucide-react";
 
 const mealIcons = {
   breakfast: Coffee,
@@ -119,14 +102,6 @@ export const FoodDiaryPage = () => {
             Food Diary
           </h1>
           <p className="text-muted-foreground">Track your daily nutrition and meals</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button asChild>
-            <Link to="/food/add">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Food
-            </Link>
-          </Button>
         </div>
       </div>
 
@@ -228,12 +203,6 @@ export const FoodDiaryPage = () => {
                     {label}
                     <Badge variant="secondary">{mealCalories} cal</Badge>
                   </CardTitle>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={`/food/add?meal=${mealType}&date=${dateString}`}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Food
-                    </Link>
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
@@ -241,9 +210,6 @@ export const FoodDiaryPage = () => {
                   <div className="text-center py-8 text-muted-foreground">
                     <MealIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>No foods logged for {label.toLowerCase()}</p>
-                    <Button variant="ghost" size="sm" className="mt-2" asChild>
-                      <Link to={`/food/add?meal=${mealType}&date=${dateString}`}>Add your first food</Link>
-                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -258,14 +224,6 @@ export const FoodDiaryPage = () => {
                             P: {entry.protein}g • C: {entry.carbs}g • F: {entry.fat}g
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -274,33 +232,6 @@ export const FoodDiaryPage = () => {
             </Card>
           );
         })}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
-          <Link to="/food/add" className="block">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5 text-primary" />
-                Quick Add
-              </CardTitle>
-              <CardDescription>Add food to your diary quickly</CardDescription>
-            </CardHeader>
-          </Link>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
-          <Link to="/food/my-foods" className="block">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Apple className="h-5 w-5 text-green-500" />
-                My Foods
-              </CardTitle>
-              <CardDescription>Manage your custom food entries</CardDescription>
-            </CardHeader>
-          </Link>
-        </Card>
       </div>
     </div>
   );
