@@ -17,11 +17,7 @@ class MainPage extends StatelessWidget {
     {'name': "Dashboard", "icon": Icons.dashboard_rounded, "target": Home()},
     {'name': "Diary", "icon": Icons.book_outlined, "target": Diary()},
     {'name': "", "icon": Icons.add, "target": addIconWidget()},
-    {
-      'name': "Progress",
-      "icon": Icons.format_list_numbered_sharp,
-      "target": Plan(),
-    },
+    {'name': "Progress", "icon": Icons.bar_chart, "target": Plan()},
     {'name': "More", "icon": Icons.more_horiz, "target": More()},
   ];
 
@@ -52,8 +48,10 @@ class MainPage extends StatelessWidget {
                         showModalBottomSheet(
                           context: context,
                           builder:
-                              (context) =>
-                                  addIconWidget(), // Replace with your widget
+                              (context) => Row(
+                                children: [Expanded(child: addIconWidget())],
+                              ),
+                          elevation: 5,
                         );
                       }
                     },
