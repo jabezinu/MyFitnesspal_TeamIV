@@ -1,8 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfitnesspal/screen/add.dart';
-import 'package:myfitnesspal/screen/diary.dart';
-import 'package:myfitnesspal/screen/more.dart';
-import 'package:myfitnesspal/screen/paln.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatefulWidget {
@@ -17,123 +14,55 @@ class _HomePage extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: _buildNavigationBar(),
-      body:
-          <Widget>[
-            ListView(children: [_buildHeader()]),
-            Diary(),
-            Add(),
-            Plan(),
-            More(),
-          ][currentPageIndex],
+      // bottomNavigationBar: _buildNavigationBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/profile");
+          },
+          icon: Icon(CupertinoIcons.person),
+        ),
+        title: Text(
+          "myfitnesspal",
+          style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.notifications_active_outlined),
+          ),
+        ],
+      ),
+      body: _buildHeader(),
     );
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 28.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              CircleAvatar(radius: 24),
-              Text(
-                "myfitnesspal",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Today",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              Icon(Icons.notifications_active_outlined),
+              ElevatedButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateColor.transparent,
+                ),
+                child: const Text("Edit"),
+              ),
             ],
           ),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Today",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateColor.transparent,
-                  ),
-                  child: const Text("Edit"),
-                ),
-              ],
-            ),
-          ),
-          _buildCard(),
-          _buildCaloriesCard(),
-          _buildInfoCards(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavigationBar() {
-    return NavigationBar(
-      destinations: [
-        NavigationDestination(
-          icon: IconButton(
-            onPressed:
-                () => setState(() {
-                  currentPageIndex = 0;
-                }),
-            icon: Icon(Icons.dashboard),
-          ),
-          label: "Dashboard",
         ),
-        NavigationDestination(
-          icon: IconButton(
-            onPressed:
-                () => setState(() {
-                  currentPageIndex = 1;
-                }),
-            icon: Icon(Icons.book_outlined),
-          ),
-          label: "Diary",
-        ),
-        NavigationDestination(
-          icon: IconButton(
-            onPressed:
-                () => setState(() {
-                  currentPageIndex = 2;
-                }),
-            icon: Icon(Icons.add),
-          ),
-          label: "",
-        ),
-        NavigationDestination(
-          icon: IconButton(
-            onPressed:
-                () => setState(() {
-                  currentPageIndex = 3;
-                }),
-            icon: Icon(Icons.format_list_numbered_sharp),
-          ),
-          label: "Plan",
-        ),
-        NavigationDestination(
-          icon: IconButton(
-            onPressed:
-                () => setState(() {
-                  currentPageIndex = 4;
-                }),
-            icon: Icon(Icons.more_horiz),
-          ),
-          label: "More",
-        ),
+        _buildCard(),
+        _buildCaloriesCard(),
+        _buildInfoCards(),
       ],
-      selectedIndex: currentPageIndex,
-      onDestinationSelected:
-          (index) => {setState(() => currentPageIndex = index)},
     );
   }
 }
