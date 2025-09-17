@@ -14,7 +14,6 @@ class _HomePage extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: _buildNavigationBar(),
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {

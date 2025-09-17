@@ -10,20 +10,29 @@ class LandingPage extends StatelessWidget {
       backgroundColor: appBackground(1),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            Spacer(),
             Text("Logo", style: TextStyle(color: appWhite(1))),
-            SizedBox(height: 50),
-            Text("Welcome", style: TextStyle(color: appWhite(1), fontSize: 40)),
-            SizedBox(height: 20),
-            Text("Log it, live it.", style: TextStyle(color: appWhite(1))),
-            SizedBox(height: 50),
+            Spacer(),
+            Column(
+              children: [
+                Text(
+                  "Welcome",
+                  style: TextStyle(color: appWhite(1), fontSize: 40),
+                ),
+                SizedBox(height: 20),
+                Text("Log it, live it.", style: TextStyle(color: appWhite(1))),
+              ],
+            ),
+            Spacer(),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/main');
               },
               child: Text("Get Started", style: TextStyle(color: appBlack(1))),
             ),
+            Spacer(),
           ],
         ),
       ),

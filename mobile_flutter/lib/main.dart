@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myfitnesspal/logic/main_page_nav/main_page_nav_cubit.dart';
 import 'package:myfitnesspal/router/app_router.dart';
-import 'package:myfitnesspal/screen/home.dart';
+import 'package:myfitnesspal/ui/screen/home.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 import 'package:myfitnesspal/auth/landing_page.dart';
-import 'package:myfitnesspal/screen/home.dart';
-import 'package:myfitnesspal/screen/main_page.dart';
-import 'package:myfitnesspal/screen/profile_page.dart';
+import 'package:myfitnesspal/ui/screen/home.dart';
+import 'package:myfitnesspal/ui/screen/main_page.dart';
+import 'package:myfitnesspal/ui/screen/profile_page.dart';
 
 final appRoute = {
   '/': (_) => LandingPage(),
