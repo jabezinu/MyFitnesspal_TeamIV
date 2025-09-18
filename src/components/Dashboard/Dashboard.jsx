@@ -13,13 +13,14 @@ import { MdOutlineFitnessCenter } from "react-icons/md";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { ProfileContext } from "../../context/ProfileContext";
+import { useWaterTracking } from "../../hooks/useWaterTracking";
 
 import food1 from "../../assets/img/food1.png";
 import food55 from "../../assets/img/food55.png";
 import im3 from "../../assets/img/im3.png";
 import im4 from "../../assets/img/im4.png";
-import profile2 from "../../assets/img/profile2.png"; // Welcome card bg
-import profile3 from "../../assets/img/profile3.png"; // Sidebar avatar fallback
+import profile2 from "../../assets/img/profile2.png";
+import profile3 from "../../assets/img/profile3.png";
 import profile4 from "../../assets/img/profile4.png";
 import profile5 from "../../assets/img/profile5.png";
 import profile6 from "../../assets/img/profile6.png";
@@ -32,22 +33,65 @@ import mangoImg from "../../assets/img/mango.png";
 import strawberryImg from "../../assets/img/strawberry.png";
 
 const Dashboard = () => {
-  const { profile } = useContext(ProfileContext); //
+  const { profile } = useContext(ProfileContext);
+  const navigate = useNavigate();
+  const { waterIntake, waterGoal, logWater, isGoalAchieved, resetWater } =
+    useWaterTracking();
+
+  // Get data from localStorage (saved from ResultsPage)
+  const [userData, setUserData] = useState({
+    bmr: 0,
+    caloriesGoal: 0,
+    tdee: 0,
+  });
+
+  useEffect(() => {
+    // Load user data from localStorage
+    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+    setUserData({
+      bmr: Math.round(currentUser.bmr) || 0,
+      caloriesGoal: Math.round(currentUser.caloriesGoal) || 0,
+      tdee: Math.round(currentUser.dailyCalories) || 0, // dailyCalories from ResultsPage is TDEE
+    });
+  }, []);
 
   // ---- Notifications State ----
   const [notificationCount, setNotificationCount] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   useEffect(() => {
-    // Load messages from localStorage (or empty array if none)
     const storedMessages = JSON.parse(localStorage.getItem("messages")) || [];
-
-    // Count only unblocked inbox messages
     const inboxCount = storedMessages.filter(
       (msg) => !msg.blocked && msg.from !== "You"
     ).length;
-
     setNotificationCount(inboxCount);
   }, []);
+
+  useEffect(() => {
+    if (isGoalAchieved) {
+      setShowCelebration(true);
+      const timer = setTimeout(() => {
+        setShowCelebration(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isGoalAchieved]);
+
+  const handleWaterLog = () => {
+    if (!isGoalAchieved) {
+      logWater();
+    }
+  };
+
+  const handleResetWater = () => {
+    resetWater();
+    setShowCelebration(false);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   const exercises = [
     { id: 1, name: "Exercise One", reps: "10 reps, 3 sets", img: food1 },
@@ -67,131 +111,35 @@ const Dashboard = () => {
     day: "numeric",
   });
 
-  // ---- Calculation logic ----
-  const heightCm =
-    (profile.heightFt || 0) * 30.48 + (profile.heightIn || 0) * 2.54;
-  const weightKg = (profile.weightLbs || 0) * 0.453592;
-
-  let bmr = 0;
-  if (weightKg > 0 && heightCm > 0 && profile.age > 0) {
-    if (profile.gender === "Male") {
-      bmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * profile.age + 5);
-    } else if (profile.gender === "Female") {
-      bmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * profile.age - 161);
-    }
-  }
-
-  const tdee = bmr ? Math.round(bmr * 1.55) : 0;
-  const caloriesGoal = bmr ? Math.round(bmr * 1.2) : 0;
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* TOP NAVBAR */}
-      <header className="flex justify-between items-center bg-[#1D2D44] text-white shadow px-6 py-3">
-        <div className="flex items-center gap-2">
-          <img src={calloglogo} alt="Callog Logo" className="h-10 w-auto" />
+      {/* Celebration Animation */}
+      {showCelebration && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <motion.div
+            className="bg-white p-8 rounded-3xl shadow-xl text-center max-w-md"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+          >
+            <div className="text-6xl mb-4">🎉</div>
+            <h3 className="text-2xl font-bold text-[#1D2D44] mb-2">
+              Congratulations!
+            </h3>
+            <p className="text-gray-600 mb-4">
+              You've reached your daily water goal!
+            </p>
+            <button
+              onClick={() => setShowCelebration(false)}
+              className="bg-[#1D2D44] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#273554] transition"
+            >
+              Continue
+            </button>
+          </motion.div>
         </div>
-        <div className="flex items-center gap-6 text-sm">
-          <div>{formattedDate}</div>
-          <button className="relative" onClick={() => navigate("/sendmail")}>
-            <FiBell className="text-xl" />
-            {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                {notificationCount}
-              </span>
-            )}
-          </button>
-          <button className="flex items-center gap-1 hover:text-red-400">
-            <FiLogOut /> Logout
-          </button>
-        </div>
-      </header>
+      )}
 
       <div className="flex flex-1">
-        <aside className="w-64 bg-white shadow-lg rounded-lg overflow-hidden flex flex-col mt-4 ml-4 p-4">
-          {/* Profile Section */}
-          <div className="text-center mb-6 relative">
-            <div className="w-20 h-20 mx-auto rounded-full p-1 bg-gradient-to-r from-[#1D2D44] to-[#FF6B6B] animate-pulse">
-              <img
-                src={profile.photo || profile3}
-                alt={profile.name || "User"}
-                className="w-full h-full rounded-full object-cover shadow-lg"
-              />
-            </div>
-
-            <h2 className="mt-2 text-xl font-extrabold text-[#1D2D44]">
-              {profile.name || "User"}
-            </h2>
-
-            <p className="text-gray-500 mt-1 text-sm">
-              {profile.gender || "-"}, {profile.age || "-"} years
-            </p>
-
-            <div className="flex justify-center mt-4 gap-4">
-              <div className="bg-[#F0F4FF] p-3 rounded-2xl flex flex-col items-center w-20 shadow-md hover:scale-105 transform transition">
-                <p className="text-xs text-gray-500">HEIGHT</p>
-                <p className="font-semibold text-sm">
-                  {profile.heightFt || 0} ft {profile.heightIn || 0} in
-                </p>
-              </div>
-              <div className="bg-[#FFF4E0] p-3 rounded-2xl flex flex-col items-center w-20 shadow-md hover:scale-105 transform transition">
-                <p className="text-xs text-gray-500">WEIGHT</p>
-                <p className="font-semibold text-sm">
-                  {profile.weightLbs || 0} lbs
-                </p>
-              </div>
-            </div>
-
-            {/* Decorative Icon (Optional) */}
-            <div className="mt-3 flex justify-center">
-              <FaRunning className="text-[#1D2D44] text-xl animate-bounce" />
-            </div>
-          </div>
-
-          {/* Navigation Buttons */}
-          <nav className="flex flex-col gap-3 mt-6">
-            {[
-              {
-                name: "Home",
-                icon: <FiHome className="text-lg" />,
-                path: "/home-summary",
-              },
-              {
-                name: "Food",
-                icon: <FiCoffee className="text-lg" />,
-                path: "/food-diary",
-              },
-              {
-                name: "Exercise",
-                icon: <FiActivity className="text-lg" />,
-                path: "/exercise-diary",
-              },
-              {
-                name: "Progress Tracking",
-                icon: <FiBarChart2 className="text-lg" />,
-                path: "/progress-tracking",
-              },
-            ].map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className="relative flex items-center gap-3 px-4 py-3 text-[#1D2D44] bg-gray-100 rounded-xl shadow-md hover:bg-gray-200 transform transition-all duration-300 hover:scale-105 group"
-              >
-                <span className="absolute left-0 top-0 h-full w-1 bg-[#1D2D44] rounded-l-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
-                {item.icon}
-                <span className="font-semibold">{item.name}</span>
-              </Link>
-            ))}
-          </nav>
-
-          {/* Achievement Box */}
-          <div className="bg-gradient-to-r from-[#1D2D44] to-[#3C4A6B] text-white p-4 text-center text-sm mt-6 rounded-xl shadow-md">
-            🎉 Congratulations!
-            <br />
-            You’ve unlocked the <strong>Expert</strong> level.
-          </div>
-        </aside>
-
         {/* MAIN SECTION */}
         <section className="flex-1 space-y-6 p-6">
           {/* Top Section: Welcome + Water */}
@@ -245,49 +193,82 @@ const Dashboard = () => {
             </div>
 
             {/* Water Intake Card */}
-            <div className="flex-1 bg-gradient-to-r from-[#1D2D44] to-[#273554] p-6 rounded-3xl shadow-md flex flex-col justify-center items-center h-[260px] text-white gap-4">
+            <div className="flex-1 bg-gradient-to-r from-[#1D2D44] to-[#273554] p-6 rounded-3xl shadow-md flex flex-col justify-center items-center h-[260px] text-white gap-4 relative">
               <FaGlassWhiskey className="text-4xl" />
               <p className="font-semibold text-xl">Daily Water Intake</p>
-              <p className="text-lg font-bold">0 / 8 Glasses</p>
-              <button className="bg-white text-[#1D2D44] px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-100 transition">
-                Log Water
-              </button>
+              <p className="text-lg font-bold">
+                {waterIntake} / {waterGoal} Glasses
+              </p>
+
+              {/* Water glasses visualization */}
+              <div className="flex gap-1 mb-2">
+                {[...Array(waterGoal)].map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-4 h-6 rounded-sm border ${
+                      index < waterIntake
+                        ? "bg-blue-400 border-blue-400"
+                        : "bg-gray-700 border-gray-500"
+                    }`}
+                  ></div>
+                ))}
+              </div>
+
+              {isGoalAchieved ? (
+                <div className="flex flex-col items-center gap-2">
+                  <div className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    Goal Achieved! 🎉
+                  </div>
+                  <button
+                    className="bg-white text-[#1D2D44] px-4 py-1 rounded-full text-sm font-semibold shadow hover:bg-gray-100 transition"
+                    onClick={handleResetWater}
+                  >
+                    Reset Counter
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="bg-white text-[#1D2D44] px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-100 transition"
+                  onClick={handleWaterLog}
+                >
+                  Log Water
+                </button>
+              )}
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Left Card: Daily Summary */}
             <motion.div
               className="flex-1 bg-white rounded-3xl shadow-md flex justify-around items-center h-[250px] p-6 gap-4"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
             >
-              {/* BMR */}
               <div className="flex-1 flex flex-col items-center gap-3 p-6 rounded-2xl text-[#1D2D44] bg-gradient-to-br from-[#A1C4FD] to-[#C2E9FB] h-[210px]">
                 <MdOutlineFitnessCenter className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">BMR</p>
-                <p className="text-2xl font-bold">{bmr || 0} kcal/day</p>
+                <p className="text-2xl font-bold">
+                  {userData.bmr.toLocaleString()} kcal/day
+                </p>
               </div>
 
-              {/* Calories Goal */}
               <div className="flex-1 flex flex-col items-center gap-3 p-6 rounded-2xl text-[#1D2D44] bg-gradient-to-br from-[#FFD3B6] to-[#FFAAA5] h-[210px]">
                 <GiFire className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">Calories Goal</p>
                 <p className="text-2xl font-bold">
-                  {caloriesGoal || 0} kcal/day
+                  {userData.caloriesGoal.toLocaleString()} kcal/day
                 </p>
               </div>
 
-              {/* TDEE */}
               <div className="flex-1 flex flex-col items-center gap-3 p-6 rounded-2xl text-[#1D2D44] bg-gradient-to-br from-[#C1F0C1] to-[#95E1D3] h-[210px]">
                 <FaRunning className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">TDEE</p>
-                <p className="text-2xl font-bold">{tdee || 0} kcal/day</p>
+                <p className="text-2xl font-bold">
+                  {userData.tdee.toLocaleString()} kcal/day
+                </p>
               </div>
             </motion.div>
 
-            {/* Right Card: Exercises Summary */}
             <motion.div
               className="flex-1 bg-gradient-to-r from-[#1D2D44] to-[#273554] text-white p-6 rounded-3xl shadow-md flex flex-col justify-between h-[250px]"
               initial={{ y: 50, opacity: 0 }}

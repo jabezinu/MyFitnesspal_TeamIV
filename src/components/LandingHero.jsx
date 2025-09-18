@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import calLogLogo from "../assets/img/calLogLogo.png";
 import firstPage from "../assets/img/firstpage.png";
+import profile2 from "../assets/img/profile2.png";
 import food55 from "../assets/img/food55.png";
 import food1 from "../assets/img/food1.png";
 import tracker2 from "../assets/img/tracker2.png";
@@ -161,6 +162,7 @@ export default function LandingHero() {
               className="mt-10 self-start inline-flex items-center px-6 md:px-8 py-3 bg-white text-[#1D2D44] rounded-full text-lg font-medium shadow-lg"
               whileHover={{ scale: 1.08, rotate: 1 }}
               whileTap={{ scale: 0.96, rotate: -1 }}
+              onClick={() => (window.location.href = "/signup")}
             >
               Start Tracking <span className="ml-3 text-xl">›</span>
             </motion.button>
@@ -267,10 +269,11 @@ export default function LandingHero() {
           </motion.div>
 
           <motion.button
-            className="bg-[#1D2D44] text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-800 transition duration-300 self-center md:self-start mt-4"
+            className="bg-[#1D2D44] text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-800 transition duration-300 self-center md:self-start mt-4 w-48 md:w-56"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: [0, 1], scale: [0.8, 1] }}
             transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+            onClick={() => (window.location.href = "/signup")}
           >
             Get Started
           </motion.button>
@@ -367,7 +370,7 @@ export default function LandingHero() {
                   key={index}
                   className="w-1/3 rounded-2xl overflow-hidden shadow-xl animate-float"
                   style={{
-                    height: index === 1 ? "450px" : "300px",
+                    height: index === 1 ? "350" : "300px",
                     animationDelay: `${index * 0.5}s`,
                   }}
                 >
@@ -382,17 +385,18 @@ export default function LandingHero() {
 
             {/* Text Content with fade-up animation */}
             <div className="flex-1 text-left text-white space-y-4 animate-fade-up">
-              <h2 className="text-4xl md:text-5xl font-bold mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-12">
                 What We Stand For
               </h2>
-              <p className="text-sm md:text-base font-normal ">
+              <p className="text-sm md:text-base font-normal text-justify ">
                 Every change starts with awareness. At CalLog, we believe that
                 understanding your nutrition is the foundation of lasting
                 health. Tracking your calories helps you make smarter choices
-                and move closer to your goals. We’re not here for quick fixes.
-                We focus on steady, meaningful progress. Each log you make is a
-                step forward, helping you understand your body’s needs and
-                empowering you to live your healthiest life.
+                and move closer to your goals. <br />
+                We’re not here for quick fixes. We focus on steady, meaningful
+                progress. Each log you make is a step forward, helping you
+                understand your body’s needs and empowering you to live your
+                healthiest life.
               </p>
             </div>
           </div>
@@ -693,7 +697,7 @@ export default function LandingHero() {
                   </a>
                 </li>
                 <li>
-                  <a href="#join" className="hover:text-green-600 transition">
+                  <a href="#join" className="hover:text-gray-500 transition">
                     Get Started
                   </a>
                 </li>
@@ -702,14 +706,16 @@ export default function LandingHero() {
 
             {/* Contact */}
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-black">Contact</h3>
+              <h3 className="text-lg font-semibold mb-4 text-[#1D2D44]">
+                Contact
+              </h3>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center space-x-2">
-                  <MdEmail className="text-black" />
+                  <MdEmail className="text-[#1D2D44]" />
                   <span>support@callog.com</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <MdPhone className="text-green-600" />
+                  <MdPhone className="text-[#1D2D44]" />
                   <span>+251983000000</span>
                 </li>
               </ul>
@@ -717,7 +723,9 @@ export default function LandingHero() {
 
             {/* Socials */}
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-black">Connect</h3>
+              <h3 className="text-lg font-semibold mb-4 text-[#1D2D44]">
+                Connect
+              </h3>
               <div className="flex space-x-5">
                 <a
                   href="#"
@@ -744,7 +752,7 @@ export default function LandingHero() {
           {/* Bottom */}
           <div className="mt-12 border-t border-gray-200 pt-5 text-center text-sm text-gray-500">
             &copy; {new Date().getFullYear()}{" "}
-            <span className="font-semibold text-green-600">CalLog</span>. All
+            <span className="font-semibold text-[#1D2D44]">CalLog</span>. All
             rights reserved.
           </div>
         </footer>

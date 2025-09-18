@@ -7,12 +7,11 @@ export default function EditPhotosPage() {
   const [photo, setPhoto] = useState(profile.photo || null);
   const navigate = useNavigate();
 
-  // Update local preview if context changes
   useEffect(() => {
     setPhoto(profile.photo || null);
   }, [profile.photo]);
 
-  // Handle file selection
+ 
   const handlePhotoChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       // Create a temporary URL for preview

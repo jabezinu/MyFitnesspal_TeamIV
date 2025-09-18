@@ -54,6 +54,9 @@ import StrengthSearch from "./components/Dashboard/StrengthSearch";
 // Progress Tracking
 import ProgressTracking from "./components/Dashboard/ProgressTracking";
 
+// Layout Component - Corrected import path
+import Layout from "./components/Dashboard/Layout";
+
 import "./index.css";
 
 export default function App() {
@@ -123,49 +126,118 @@ export default function App() {
               <Route path="/signup/results" element={<ResultsPage />} />
 
               {/* Dashboard & Summary */}
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <Layout activeTab="Home">
+                    <Dashboard />
+                  </Layout>
+                }
+              />
               <Route
                 path="/home-summary"
                 element={
-                  <HomeSummary
-                    user={{
-                      name: "New User",
-                      gender: "Male",
-                      age: 28,
-                      heightFt: 6,
-                      heightIn: 1,
-                      weightLbs: 176,
-                    }}
-                  />
+                  <Layout activeTab="Home">
+                    <HomeSummary />
+                  </Layout>
                 }
               />
-              <Route path="/sendmail" element={<SendMail />} />
+              <Route
+                path="/sendmail"
+                element={
+                  <Layout showHeader={true} activeTab="">
+                    <SendMail />
+                  </Layout>
+                }
+              />
 
               {/* Profile & Edit Pages */}
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/edit-profile" element={<EditProfilePage />} />
-              <Route path="/edit-photos" element={<EditPhotosPage />} />
+              <Route
+                path="/profile"
+                element={
+                  <Layout activeTab="">
+                    <ProfilePage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/edit-profile"
+                element={
+                  <Layout activeTab="">
+                    <EditProfilePage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/edit-photos"
+                element={
+                  <Layout activeTab="">
+                    <EditPhotosPage />
+                  </Layout>
+                }
+              />
 
               {/* Food Diary */}
               <Route
                 path="/food-diary"
                 element={
-                  <FoodDiary
-                    dailyGoal={dailyGoal}
-                    selectedDate="Tuesday, September 9, 2025"
-                  />
+                  <Layout activeTab="Food">
+                    <FoodDiary dailyGoal={dailyGoal} />
+                  </Layout>
                 }
               />
-              <Route path="/foodsearch" element={<FoodSearch />} />
-              <Route path="/quicktool" element={<QuickTool />} />
+              <Route
+                path="/foodsearch"
+                element={
+                  <Layout activeTab="Food">
+                    <FoodSearch />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/quicktool"
+                element={
+                  <Layout activeTab="Food">
+                    <QuickTool />
+                  </Layout>
+                }
+              />
 
               {/* Exercise */}
-              <Route path="/exercise-diary" element={<ExerciseDiary />} />
-              <Route path="/exercisesearch" element={<CardioSearch />} />
-              <Route path="/strengthsearch" element={<StrengthSearch />} />
+              <Route
+                path="/exercise-diary"
+                element={
+                  <Layout activeTab="Exercise">
+                    <ExerciseDiary />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/exercisesearch"
+                element={
+                  <Layout activeTab="Exercise">
+                    <CardioSearch />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/strengthsearch"
+                element={
+                  <Layout activeTab="Exercise">
+                    <StrengthSearch />
+                  </Layout>
+                }
+              />
 
               {/* Progress Tracking */}
-              <Route path="/progress-tracking" element={<ProgressTracking />} />
+              <Route
+                path="/progress-tracking"
+                element={
+                  <Layout activeTab="Progress Tracking">
+                    <ProgressTracking />
+                  </Layout>
+                }
+              />
             </Routes>
           </Router>
         </ExercisesProvider>

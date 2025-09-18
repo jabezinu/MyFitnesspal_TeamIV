@@ -111,10 +111,7 @@ const FoodDiary = ({ selectedDate }) => {
     <div>
       {/* Navbar */}
       <nav className="relative flex justify-between items-center bg-[#1D2D44] px-6 py-3 shadow-lg">
-        <div className="flex items-center gap-3">
-          <img src={calloglogo} alt="Logo" className="h-10 w-auto" />
-        </div>
-        <div className="relative flex gap-6">
+        <div className="relative flex gap-6 ml-220">
           {["Food Diary", "My Foods"].map((tab) => (
             <div key={tab} className="relative">
               <button
@@ -216,7 +213,9 @@ const FoodDiary = ({ selectedDate }) => {
                   <button
                     type="button"
                     onClick={() =>
-                      navigate("/quicktool", { state: { mealType, selectedDate } })
+                      navigate("/quicktool", {
+                        state: { mealType, selectedDate },
+                      })
                     }
                     className="px-4 py-2 bg-[#FF6B6B] text-white rounded-lg hover:bg-[#FF4B4B] transition"
                   >
@@ -253,7 +252,9 @@ const FoodDiary = ({ selectedDate }) => {
                 </tr>
                 <tr>
                   <td className="p-2 font-semibold">Daily Goal</td>
-                  <td className="p-2 text-center">{dailyGoal?.calories ?? 0}</td>
+                  <td className="p-2 text-center">
+                    {dailyGoal?.calories ?? 0}
+                  </td>
                   <td className="p-2 text-center">{dailyGoal?.carbs ?? 0}</td>
                   <td className="p-2 text-center">{dailyGoal?.fat ?? 0}</td>
                   <td className="p-2 text-center">{dailyGoal?.protein ?? 0}</td>

@@ -30,6 +30,25 @@ const ResultsPage = () => {
     }
   }, [firstName, bmr, navigate]);
 
+  // Calculate age from birthDate
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return "";
+
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+
+    return age.toString();
+  };
+
   // Save user and authenticate
   const handleFinish = () => {
     let users = JSON.parse(localStorage.getItem("users")) || [];
@@ -49,7 +68,7 @@ const ResultsPage = () => {
       bmr,
       dailyCalories,
       caloriesGoal,
-      weeklyGoal, // ✅ now saving weeklyGoal properly
+      weeklyGoal,
     };
 
     // Save to users list
@@ -58,6 +77,19 @@ const ResultsPage = () => {
 
     // Set as current logged-in user
     localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+    // Save profile data for the Layout component
+    const profileData = {
+      name: `${firstName || ""} ${lastName || ""}`.trim(),
+      gender: gender || "",
+      age: calculateAge(birthDate),
+      heightFt: heightFeet || "",
+      heightIn: heightInches || "",
+      weightLbs: weightPounds || "",
+      photo: null, // You can add photo handling later
+    };
+
+    localStorage.setItem("userProfile", JSON.stringify(profileData));
 
     // Redirect to dashboard
     navigate("/dashboard");

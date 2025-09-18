@@ -1,14 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { GiFire } from "react-icons/gi";
 import { MdOutlineFitnessCenter } from "react-icons/md";
 import { FaRunning } from "react-icons/fa";
 import { motion } from "framer-motion";
-import calloglogo from "../../assets/img/calloglogo.png";
+import { ProfileContext } from "../../context/ProfileContext";
 
-const HomeSummary = ({ user }) => {
+const HomeSummary = () => {
   const navigate = useNavigate();
+  const { profile } = useContext(ProfileContext);
   const [activeTab, setActiveTab] = useState("Home Summary");
+
+ 
+  const [userData, setUserData] = useState({
+    bmr: 0,
+    caloriesGoal: 0,
+    tdee: 0,
+  });
+
+  useEffect(() => {
+    
+    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+    setUserData({
+      bmr: Math.round(currentUser.bmr) || 0,
+      caloriesGoal: Math.round(currentUser.caloriesGoal) || 0,
+      tdee: Math.round(currentUser.dailyCalories) || 0, // dailyCalories from ResultsPage is TDEE
+    });
+  }, []);
 
   const [userGoals, setUserGoals] = useState(
     JSON.parse(localStorage.getItem("userGoals")) || {
@@ -34,33 +53,6 @@ const HomeSummary = ({ user }) => {
     JSON.parse(localStorage.getItem("checkInHistory")) || []
   );
 
-  // Convert height/weight
-  const heightCm = user.heightFt * 30.48 + user.heightIn * 2.54;
-  const weightKg = user.weightLbs * 0.453592;
-
-  // Calculate BMR
-  let baseBmr = 0;
-  if (weightKg > 0 && heightCm > 0 && user.age > 0) {
-    baseBmr =
-      user.gender === "Male"
-        ? Math.round(10 * weightKg + 6.25 * heightCm - 5 * user.age + 5)
-        : Math.round(10 * weightKg + 6.25 * heightCm - 5 * user.age - 161);
-  }
-
-  const [bmr, setBmr] = useState(baseBmr);
-  const [caloriesGoal, setCaloriesGoal] = useState(
-    baseBmr ? Math.round(baseBmr * 1.2) : 0
-  );
-  const [tdee, setTdee] = useState(baseBmr ? Math.round(baseBmr * 1.55) : 0);
-
-  useEffect(() => {
-    if (userGoals.calories) {
-      setCaloriesGoal(Number(userGoals.calories));
-    } else {
-      setCaloriesGoal(baseBmr ? Math.round(baseBmr * 1.2) : 0);
-    }
-  }, [userGoals.calories, baseBmr]);
-
   const handleGoalChange = (e) => {
     const { name, value } = e.target;
     const updatedGoals = { ...userGoals, [name]: value };
@@ -75,7 +67,15 @@ const HomeSummary = ({ user }) => {
 
   const handleSaveCheckIn = () => {
     const today = new Date().toLocaleDateString();
-    const newEntry = { ...checkIn, date: today };
+    const newEntry = {
+      ...checkIn,
+      date: today,
+      // Round the values when saving
+      weight: checkIn.weight ? Math.round(checkIn.weight * 10) / 10 : "",
+      bmr: checkIn.bmr ? Math.round(checkIn.bmr) : "",
+      calories: checkIn.calories ? Math.round(checkIn.calories) : "",
+      tdee: checkIn.tdee ? Math.round(checkIn.tdee) : "",
+    };
 
     const updatedHistory = [...checkInHistory, newEntry];
     setCheckInHistory(updatedHistory);
@@ -106,9 +106,9 @@ const HomeSummary = ({ user }) => {
       case "Home Summary":
         return (
           <>
-            <div className="flex flex-wrap justify-between items-start gap-8 mt-8 max-w-6xl mx-auto px-4">
+            <div className="flex flex-wrap justify-between items-start gap-8 mt-8 max-w-6xl mx-auto px-4 ">
               <motion.div
-                className="bg-gray-200 rounded-xl -ml-32 shadow-lg p-6 flex-1 max-w-xl"
+                className="bg-gray-200 rounded-xl shadow-lg p-6 flex-1 max-w-sm"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
@@ -126,7 +126,7 @@ const HomeSummary = ({ user }) => {
                 </p>
               </motion.div>
 
-              <div className="flex flex-row flex-wrap -mr-56 justify-center gap-6 flex-1">
+              <div className="flex flex-row flex-wrap justify-center gap-6 flex-1">
                 <motion.div
                   className="flex flex-col items-center gap-3 p-6 w-48 rounded-2xl text-[#1D2D44] bg-gradient-to-br from-[#A1C4FD] to-[#C2E9FB] shadow-lg cursor-pointer"
                   initial={{ opacity: 0, y: 30 }}
@@ -137,7 +137,9 @@ const HomeSummary = ({ user }) => {
                 >
                   <MdOutlineFitnessCenter className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full shadow" />
                   <p className="text-lg font-semibold">BMR</p>
-                  <p className="text-2xl font-bold">{bmr || 0} kcal/day</p>
+                  <p className="text-2xl font-bold">
+                    {userData.bmr.toLocaleString()} kcal/day
+                  </p>
                 </motion.div>
 
                 <motion.div
@@ -151,7 +153,7 @@ const HomeSummary = ({ user }) => {
                   <GiFire className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full shadow" />
                   <p className="text-lg font-semibold">Calories Goal</p>
                   <p className="text-2xl font-bold">
-                    {caloriesGoal || 0} kcal/day
+                    {userData.caloriesGoal.toLocaleString()} kcal/day
                   </p>
                 </motion.div>
 
@@ -165,7 +167,9 @@ const HomeSummary = ({ user }) => {
                 >
                   <FaRunning className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full shadow" />
                   <p className="text-lg font-semibold">TDEE</p>
-                  <p className="text-2xl font-bold">{tdee || 0} kcal/day</p>
+                  <p className="text-2xl font-bold">
+                    {userData.tdee.toLocaleString()} kcal/day
+                  </p>
                 </motion.div>
               </div>
             </div>
@@ -218,7 +222,7 @@ const HomeSummary = ({ user }) => {
                   </button>
                 </div>
                 <img
-                  src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=400&q=80&auto=format"
+                  src="https://images.unsplash.com-1605296867304-46d5465a13f1?w=400&q=80&auto=format"
                   alt="Healthy Food"
                   className="w-40 h-40 object-cover rounded-lg shadow-md flex-shrink-0"
                 />
@@ -252,7 +256,6 @@ const HomeSummary = ({ user }) => {
             </div>
           </>
         );
-
       case "Goals":
         return (
           <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-lg mt-6">
@@ -328,6 +331,7 @@ const HomeSummary = ({ user }) => {
                       value={userGoals.water}
                       onChange={handleGoalChange}
                       className="w-full p-2 border rounded-lg"
+                      step="0.1"
                     />
                   </div>
                 </div>
@@ -362,6 +366,8 @@ const HomeSummary = ({ user }) => {
                       value={userGoals.exerciseDays}
                       onChange={handleGoalChange}
                       className="w-full p-2 border rounded-lg"
+                      min="0"
+                      max="7"
                     />
                   </div>
                   <div>
@@ -374,14 +380,60 @@ const HomeSummary = ({ user }) => {
                       value={userGoals.minutes}
                       onChange={handleGoalChange}
                       className="w-full p-2 border rounded-lg"
+                      min="0"
                     />
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Display Box for Current Goals */}
+            <div className="mt-8 bg-blue-50 p-6 rounded-xl border border-blue-200">
+              <h3 className="text-xl font-semibold mb-4 text-[#1D2D44] flex items-center gap-2">
+                <span>📋</span> Your Current Goals
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">
+                    Nutrition Goals
+                  </h4>
+                  <ul className="space-y-1 text-sm">
+                    <li>• Calories: {userGoals.calories || "0"} kcal/day</li>
+                    <li>• Protein: {userGoals.protein || "0"}g/day</li>
+                    <li>• Carbs: {userGoals.carbs || "0"}g/day</li>
+                    <li>• Fat: {userGoals.fat || "0"}g/day</li>
+                    <li>• Water: {userGoals.water || "0"}L/day</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">
+                    Fitness Goals
+                  </h4>
+                  <ul className="space-y-1 text-sm">
+                    <li>• Weight Loss: {userGoals.weightLoss || "0"}kg/week</li>
+                    <li>
+                      • Exercise: {userGoals.exerciseDays || "0"} days/week
+                    </li>
+                    <li>• Duration: {userGoals.minutes || "0"} minutes/day</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={() => {
+                  // Save logic would go here
+                  alert("Goals saved successfully!");
+                }}
+                className="px-6 py-3 bg-[#1D2D44] text-white rounded-lg font-semibold hover:bg-[#163153] transition-colors shadow-md"
+              >
+                Save Goals
+              </button>
+            </div>
           </div>
         );
-
       case "CheckIn":
         return (
           <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-lg mt-6">
@@ -400,19 +452,19 @@ const HomeSummary = ({ user }) => {
                   placeholder: "Enter today's weight",
                 },
                 {
-                  name: "steps",
-                  label: "Steps Walked",
-                  placeholder: "Number of steps today",
+                  name: "bmr",
+                  label: "BMR",
+                  placeholder: "Enter your BMR",
                 },
                 {
-                  name: "sleep",
-                  label: "Sleep (hours)",
-                  placeholder: "Hours of sleep",
+                  name: "calories",
+                  label: "Calories Goal",
+                  placeholder: "Enter calorie goal",
                 },
                 {
-                  name: "mood",
-                  label: "Mood (1–10)",
-                  placeholder: "Rate your mood 1-10",
+                  name: "tdee",
+                  label: "TDEE",
+                  placeholder: "Enter your TDEE",
                 },
               ].map((item) => (
                 <div key={item.name}>
@@ -426,8 +478,8 @@ const HomeSummary = ({ user }) => {
                     onChange={handleCheckInChange}
                     className="w-full p-3 border rounded-lg"
                     placeholder={item.placeholder}
-                    min={item.name === "mood" ? "1" : "0"}
-                    max={item.name === "mood" ? "10" : ""}
+                    min="0"
+                    step={item.name === "weight" ? "0.1" : "1"}
                   />
                 </div>
               ))}
@@ -439,28 +491,32 @@ const HomeSummary = ({ user }) => {
               </h3>
               <div className="bg-gray-50 p-4 rounded-lg">
                 {checkIn.weight ||
-                checkIn.steps ||
-                checkIn.sleep ||
-                checkIn.mood ? (
+                checkIn.bmr ||
+                checkIn.calories ||
+                checkIn.tdee ? (
                   <ul className="space-y-2">
                     {checkIn.weight && (
                       <li>
-                        Weight: <strong>{checkIn.weight} kg</strong>
+                        Weight:{" "}
+                        <strong>
+                          {Math.round(checkIn.weight * 10) / 10} kg
+                        </strong>
                       </li>
                     )}
-                    {checkIn.steps && (
+                    {checkIn.bmr && (
                       <li>
-                        Steps: <strong>{checkIn.steps}</strong>
+                        BMR: <strong>{Math.round(checkIn.bmr)}</strong>
                       </li>
                     )}
-                    {checkIn.sleep && (
+                    {checkIn.calories && (
                       <li>
-                        Sleep: <strong>{checkIn.sleep} hours</strong>
+                        Calories Goal:{" "}
+                        <strong>{Math.round(checkIn.calories)}</strong>
                       </li>
                     )}
-                    {checkIn.mood && (
+                    {checkIn.tdee && (
                       <li>
-                        Mood: <strong>{checkIn.mood}/10</strong>
+                        TDEE: <strong>{Math.round(checkIn.tdee)}</strong>
                       </li>
                     )}
                   </ul>
@@ -488,10 +544,12 @@ const HomeSummary = ({ user }) => {
                         className="p-3 bg-gray-100 rounded-lg text-sm"
                       >
                         <strong>{entry.date}:</strong>
-                        {entry.weight && ` Weight: ${entry.weight}kg |`}
-                        {entry.steps && ` Steps: ${entry.steps} |`}
-                        {entry.sleep && ` Sleep: ${entry.sleep}h |`}
-                        {entry.mood && ` Mood: ${entry.mood}/10`}
+                        {entry.weight &&
+                          ` Weight: ${Math.round(entry.weight * 10) / 10}kg |`}
+                        {entry.bmr && ` BMR: ${Math.round(entry.bmr)} |`}
+                        {entry.calories &&
+                          ` Calories: ${Math.round(entry.calories)} |`}
+                        {entry.tdee && ` TDEE: ${Math.round(entry.tdee)}`}
                       </li>
                     ))}
                   </ul>
@@ -500,7 +558,6 @@ const HomeSummary = ({ user }) => {
             </div>
           </div>
         );
-
       default:
         return <div className="p-6">Other tabs...</div>;
     }
@@ -508,9 +565,16 @@ const HomeSummary = ({ user }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation Tabs - Keep this for the HomeSummary-specific tabs */}
       <nav className="relative flex justify-between items-center bg-[#1D2D44] px-6 py-3 shadow-lg">
         <div className="flex items-center gap-3">
-          <img src={calloglogo} alt="Logo" className="h-10 w-auto" />
+          <h1
+            className="text-white text-xl font-bold cursor-pointer hover:underline"
+            onClick={() => navigate("/dashboard")}
+            style={{ cursor: "pointer" }}
+          >
+            Home Dashboard
+          </h1>
         </div>
         <div className="relative flex gap-6">
           {["Home Summary", "Goals", "CheckIn", "Mail", "Profile"].map(

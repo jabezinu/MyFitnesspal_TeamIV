@@ -13,7 +13,6 @@ export default function ProfilePage() {
       </h2>
 
       <div className="flex flex-col md:flex-row items-center md:items-start mb-6">
-        {/* Profile Photo */}
         <div className="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center mb-4 md:mb-0 md:mr-6 overflow-hidden border-4 border-gray-200">
           {profile.photo ? (
             <img
@@ -35,7 +34,6 @@ export default function ProfilePage() {
           )}
         </div>
 
-        
         <div>
           <p className="font-bold text-lg">{profile.name || "New User"}</p>
           <p>
@@ -68,7 +66,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* About Sections */}
       <div className="space-y-4">
         <div>
           <h3 className="text-[#1D2D44] font-semibold">About Me:</h3>
@@ -92,7 +89,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Navigation Button */}
       <button
         onClick={() => navigate("/dashboard")}
         className="mt-6 bg-gray-300 px-4 py-2 rounded-lg shadow hover:bg-gray-400 transition"

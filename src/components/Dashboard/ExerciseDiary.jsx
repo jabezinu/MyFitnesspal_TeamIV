@@ -26,10 +26,7 @@ const ExerciseDiary = ({ selectedDate }) => {
     <div className="min-h-screen bg-white text-[#1D2D44]">
       {/* Navbar */}
       <nav className="relative flex justify-between items-center bg-[#1D2D44] px-6 py-3 shadow-lg">
-        <div className="flex items-center gap-3">
-          <img src={calloglogo} alt="Logo" className="h-10 w-auto" />
-        </div>
-        <div className="relative flex gap-6">
+        <div className="relative flex gap-6 ml-160">
           {["Exercise Diary", "Exercise Database", "My Exercises"].map(
             (tab) => (
               <div key={tab} className="relative">

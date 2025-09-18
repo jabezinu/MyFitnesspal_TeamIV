@@ -7,7 +7,7 @@ const CardioSearch = ({ onAddToDiary }) => {
   const [results, setResults] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
-  // Search function using WGER API
+ 
   const handleSearch = async () => {
     if (!query) return;
     try {
@@ -17,7 +17,7 @@ const CardioSearch = ({ onAddToDiary }) => {
         )}`
       );
       const data = await response.json();
-      // Map to format: name, minutes default 30, calories estimated default 200
+
       const formattedResults = data.results.map((ex) => ({
         id: ex.id,
         name: ex.name,
@@ -66,7 +66,7 @@ const CardioSearch = ({ onAddToDiary }) => {
       return;
     }
 
-    onAddToDiary(exercisesToAdd); // send to parent (Exercise Diary)
+    onAddToDiary(exercisesToAdd); // 
     alert(`${exercisesToAdd.length} exercise(s) added to diary!`);
     setResults([]);
     setSelectedExercise(null);
@@ -80,7 +80,6 @@ const CardioSearch = ({ onAddToDiary }) => {
         <img src={calloglogo} alt="Logo" className="h-10 w-auto" />
       </nav>
 
-     
       <div className="max-w-4xl mx-auto mt-10 bg-white rounded-3xl p-6 shadow-xl border border-gray-200">
         <h2 className="text-2xl font-bold mb-4">Search Cardio Exercises</h2>
         <div className="flex gap-3 mb-6">
@@ -125,7 +124,6 @@ const CardioSearch = ({ onAddToDiary }) => {
           </motion.div>
         )}
 
-       
         {selectedExercise && (
           <div className="mt-6 p-4 border rounded-xl shadow bg-gray-50">
             <h3 className="text-xl font-semibold mb-3">
@@ -146,7 +144,6 @@ const CardioSearch = ({ onAddToDiary }) => {
           </div>
         )}
 
-       
         {results.length > 0 && (
           <div className="mt-6 text-right">
             <button

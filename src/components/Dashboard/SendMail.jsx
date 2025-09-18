@@ -44,14 +44,13 @@ const SendMail = () => {
     body: "",
   });
 
-  // Toggle individual message selection
+ 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((msgId) => msgId !== id) : [...prev, id]
     );
   };
 
-  // Toggle select all messages
   const toggleSelectAll = () => {
     if (selectAll) {
       setSelectedIds([]);
@@ -71,7 +70,7 @@ const SendMail = () => {
     setViewMessage(null);
   };
 
-  // Block selected messages/users
+  
   const blockSelected = () => {
     setMessages(
       messages.map((msg) =>
@@ -134,14 +133,11 @@ const SendMail = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Navbar */}
       <nav className="flex items-center justify-between bg-[#1D2D44] px-6 py-3 shadow-md">
-        <div className="flex items-center space-x-3">
-          <img src={calloglogo} alt="Logo" className="h-10 w-auto" />
-        </div>
         <button
-          onClick={() => navigate("/checkin")}
+          onClick={() => navigate("/home-summary")}
           className="px-4 py-2 bg-[#FFFFFF] text-[#1D2D44] rounded-lg shadow hover:bg-[#FF4B4B] transition"
         >
-          Back to Check-In
+          Back to Home
         </button>
       </nav>
 
@@ -313,7 +309,7 @@ const SendMail = () => {
         </main>
       </div>
 
-      {/* Compose Modal */}
+     
       {showCompose && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
