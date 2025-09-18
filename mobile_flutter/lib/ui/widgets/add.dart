@@ -1,47 +1,27 @@
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> _addCardData = [
-  {
-    'lable': "Log Food",
-    "icon": Icons.search_rounded,
-    "target": Text("Unimplemented"),
-  },
-  {
-    'lable': "Barcode Scan",
-    "icon": Icons.barcode_reader,
-    "target": Text("Unimplemented"),
-  },
-  {
-    'lable': "Voice Log",
-    "icon": Icons.mic_none_rounded,
-    "target": Text("Unimplemented"),
-  },
+  {'lable': "Log Food", "icon": Icons.search_rounded, "target": "waterLog"},
+  {'lable': "Barcode Scan", "icon": Icons.barcode_reader, "target": "waterLog"},
+  {'lable': "Voice Log", "icon": Icons.mic_none_rounded, "target": "waterLog"},
   {
     'lable': "Meal Scan",
     "icon": Icons.qr_code_scanner_rounded,
-    "target": Text("Unimplemented"),
+    "target": "waterLog",
   },
 ];
 
 final List<Map<String, dynamic>> _horizontalCardData = [
-  {
-    'lable': "Water",
-    "icon": Icons.water_drop_rounded,
-    "target": Text("Unimplemented"),
-  },
-  {
-    'lable': "Weight",
-    "icon": Icons.balance_rounded,
-    "target": Text("Unimplemented"),
-  },
+  {'lable': "Water", "icon": Icons.water_drop_rounded, "target": "/waterLog"},
+  {'lable': "Weight", "icon": Icons.balance_rounded, "target": "waterLog"},
   {
     'lable': "Exercise",
     "icon": Icons.fitness_center_rounded,
-    "target": Text("Unimplemented"),
+    "target": "waterLog",
   },
 ];
 
-Widget addIconWidget() {
+Widget addIconWidget(BuildContext context) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
@@ -49,17 +29,27 @@ Widget addIconWidget() {
         alignment: WrapAlignment.center,
         children: [
           for (var item in _addCardData)
-            _buildCard(item["lable"], item["icon"], item["target"]),
+            _buildCard(context, item["lable"], item["icon"], item["target"]),
 
           for (var item in _horizontalCardData)
-            _horizontalCard(item["lable"], item["icon"], item["target"]),
+            _horizontalCard(
+              context,
+              item["lable"],
+              item["icon"],
+              item["target"],
+            ),
         ],
       ),
     ],
   );
 }
 
-Widget _buildCard(String label, dynamic icon, dynamic target) {
+Widget _buildCard(
+  BuildContext context,
+  String label,
+  dynamic icon,
+  String target,
+) {
   return SizedBox(
     width: 150,
     height: 130,
@@ -81,9 +71,17 @@ Widget _buildCard(String label, dynamic icon, dynamic target) {
   );
 }
 
-Widget _horizontalCard(String label, dynamic icon, dynamic target) {
+Widget _horizontalCard(
+  BuildContext context,
+  String label,
+  dynamic icon,
+  String target,
+) {
   return InkWell(
-    onTap: () {},
+    onTap: () {
+      Navigator.pop(context);
+      Navigator.pushNamed(context, target);
+    },
     child: Card(
       elevation: 1,
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),

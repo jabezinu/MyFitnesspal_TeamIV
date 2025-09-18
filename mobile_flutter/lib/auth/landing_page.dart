@@ -7,22 +7,25 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appBackground(1),
+      // backgroundColor: appBackground(1),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Spacer(),
-            Text("Logo", style: TextStyle(color: appWhite(1))),
+            Image.asset("assets/logo/calloglogo.png", color: appBackground(1)),
             Spacer(),
             Column(
               children: [
                 Text(
                   "Welcome",
-                  style: TextStyle(color: appWhite(1), fontSize: 40),
+                  style: TextStyle(color: appBlack(1), fontSize: 45),
                 ),
                 SizedBox(height: 20),
-                Text("Log it, live it.", style: TextStyle(color: appWhite(1))),
+                Text(
+                  "Log it, live it.",
+                  style: TextStyle(color: appBlack(1), fontSize: 20),
+                ),
               ],
             ),
             Spacer(),
@@ -30,7 +33,14 @@ class LandingPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/main');
               },
-              child: Text("Get Started", style: TextStyle(color: appBlack(1))),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: appBackground(0.71),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text("Get Started", style: TextStyle(color: appWhite(1))),
             ),
             Spacer(),
           ],

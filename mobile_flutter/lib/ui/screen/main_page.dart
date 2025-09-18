@@ -16,7 +16,7 @@ class MainPage extends StatelessWidget {
   final List<Map<String, dynamic>> userPages = [
     {'name': "Dashboard", "icon": Icons.dashboard_rounded, "target": Home()},
     {'name': "Diary", "icon": Icons.book_outlined, "target": Diary()},
-    {'name': "", "icon": Icons.add, "target": addIconWidget()},
+    {'name': "", "icon": Icons.add},
     {'name': "Progress", "icon": Icons.bar_chart, "target": Plan()},
     {'name': "More", "icon": Icons.more_horiz, "target": More()},
   ];
@@ -49,7 +49,9 @@ class MainPage extends StatelessWidget {
                           context: context,
                           builder:
                               (context) => Row(
-                                children: [Expanded(child: addIconWidget())],
+                                children: [
+                                  Expanded(child: addIconWidget(context)),
+                                ],
                               ),
                           elevation: 5,
                         );
