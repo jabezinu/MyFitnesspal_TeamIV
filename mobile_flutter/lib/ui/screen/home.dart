@@ -61,6 +61,7 @@ class _HomePage extends State<Home> {
         _buildCard(),
         _buildCaloriesCard(),
         _buildInfoCards(),
+        SizedBox(height: 80),
       ],
     );
   }

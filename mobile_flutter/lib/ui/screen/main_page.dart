@@ -65,7 +65,7 @@ class MainPage extends StatelessWidget {
                           (userPages.indexOf(item) == 2)
                               ? Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: appBackground(1),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(

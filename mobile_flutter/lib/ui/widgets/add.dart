@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:myfitnesspal/constatnts/app_colors.dart';
 
 final List<Map<String, dynamic>> _addCardData = [
   {'lable': "Log Food", "icon": Icons.search_rounded, "target": "waterLog"},
-  {'lable': "Barcode Scan", "icon": Icons.barcode_reader, "target": "waterLog"},
-  {'lable': "Voice Log", "icon": Icons.mic_none_rounded, "target": "waterLog"},
+  {
+    'lable': "Check In",
+    "icon": Icons.check_circle_rounded,
+    "target": "/dailyCheckin",
+  },
+  {
+    'lable': "Log Water",
+    "icon": Icons.water_drop_rounded,
+    "target": "/waterLog",
+  },
   {
     'lable': "Meal Scan",
     "icon": Icons.qr_code_scanner_rounded,
@@ -12,7 +21,7 @@ final List<Map<String, dynamic>> _addCardData = [
 ];
 
 final List<Map<String, dynamic>> _horizontalCardData = [
-  {'lable': "Water", "icon": Icons.water_drop_rounded, "target": "/waterLog"},
+  {'lable': "Voice Log", "icon": Icons.mic_none_rounded, "target": "waterLog"},
   {'lable': "Weight", "icon": Icons.balance_rounded, "target": "waterLog"},
   {
     'lable': "Exercise",
@@ -54,7 +63,10 @@ Widget _buildCard(
     width: 150,
     height: 130,
     child: InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, target);
+      },
       child: Card(
         elevation: 3,
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -63,7 +75,7 @@ Widget _buildCard(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(icon), Text(label)],
+            children: [Icon(icon, color: appBackground(1)), Text(label)],
           ),
         ),
       ),
@@ -91,7 +103,7 @@ Widget _horizontalCard(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: 20,
-          children: [Icon(icon), Text(label)],
+          children: [Icon(icon, color: appBackground(1)), Text(label)],
         ),
       ),
     ),
