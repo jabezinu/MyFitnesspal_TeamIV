@@ -33,7 +33,7 @@ class More extends StatelessWidget {
                         radius: 30,
                         backgroundImage: NetworkImage(
                           'https://example.com/profile.jpg',
-                        ), // Replace with your image URL
+                        ),
                       ),
                       Text(
                         "Leta Dejene",

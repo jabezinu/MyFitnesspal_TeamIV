@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfitnesspal/constatnts/app_colors.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatefulWidget {
@@ -15,11 +16,14 @@ class _HomePage extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/profile");
-          },
-          icon: Icon(CupertinoIcons.person),
+        leadingWidth: 80,
+        leading: InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: () => Navigator.pushNamed(context, "/profile"),
+          child: CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+          ),
         ),
         title: Text(
           "myfitnesspal",
@@ -44,9 +48,13 @@ class _HomePage extends State<Home> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Today",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: appBackground(1),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {},
@@ -58,8 +66,8 @@ class _HomePage extends State<Home> {
             ],
           ),
         ),
-        _buildCard(),
         _buildCaloriesCard(),
+        _buildCard(),
         _buildInfoCards(),
         SizedBox(height: 80),
       ],
@@ -139,6 +147,10 @@ Widget _buildCard() {
                               percent: percent,
                               center: Text(goal),
                               progressColor: color,
+                              animateToInitialPercent: true,
+                              animation: true,
+                              restartAnimation: true,
+                              animationDuration: 600,
                             ),
                             const SizedBox(height: 8),
                             Text(left),
@@ -156,6 +168,11 @@ Widget _buildCard() {
 }
 
 Widget _buildCaloriesCard() {
+  final List<Map<String, dynamic>> someData = [
+    {"label": "Base Goal", "icon": Icons.flag_circle_rounded},
+    {"label": "Food", "icon": Icons.food_bank_outlined},
+    {"label": "Exercise", "icon": Icons.fitness_center_rounded},
+  ];
   return SizedBox(
     height: 260,
     child: Card(
@@ -173,13 +190,78 @@ Widget _buildCaloriesCard() {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Remaining = Goal - Food + Exercise",
+                style: TextStyle(color: appGrey(0.61)),
+              ),
+            ),
             const SizedBox(height: 20),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 CircularPercentIndicator(
                   lineWidth: 10,
-                  radius: 50,
-                  percent: 0.5,
+                  radius: 70,
+                  percent: 0.1,
+                  progressColor: Colors.blue,
+                  animateToInitialPercent: true,
+                  animation: true,
+                  restartAnimation: true,
+                  animationDuration: 900,
+                  center: Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          "2419",
+                          style: TextStyle(
+                            color: appBackground(1),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Remaining",
+                          style: TextStyle(color: appGrey(0.6)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  spacing: 3,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var item in someData)
+                      Row(
+                        spacing: 15,
+                        children: [
+                          Icon(
+                            item["icon"],
+                            size: 20,
+                            color: const Color.fromARGB(255, 243, 33, 86),
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                item["label"],
+                                style: TextStyle(color: appGrey(0.6)),
+                              ),
+                              Text(
+                                "2520",
+                                style: TextStyle(
+                                  color: appBackground(1),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ],
             ),

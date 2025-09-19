@@ -53,7 +53,31 @@ class Diary extends StatelessWidget {
                   "Snacks",
                   "Exercise",
                 ])
-                  _BuildTabelDisplay(item),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: _BuildTabelDisplay(item),
+                  ),
+                SizedBox(height: 30),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appBackground(0.81),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 6,
+                    shadowColor: appBackground(1),
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  label: Text("Complete Daily"),
+                  icon: Icon(Icons.fact_check_outlined, size: 30),
+                ),
+                SizedBox(height: 30),
               ],
             ),
           ),
