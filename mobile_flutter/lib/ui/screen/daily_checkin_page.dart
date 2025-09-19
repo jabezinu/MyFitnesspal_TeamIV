@@ -46,8 +46,8 @@ class _DailyCheckinPageState extends State<DailyCheckinPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Daily Check-in"),
-        backgroundColor: appBackground(1),
-        foregroundColor: appWhite(1),
+        // backgroundColor: appBackground(1),
+        // foregroundColor: appWhite(1),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -61,15 +61,9 @@ class _DailyCheckinPageState extends State<DailyCheckinPage> {
                 style: TextStyle(color: appBackground(1)),
               ),
               _buildTextField("Weight (kg)", weightController),
-              _buildTextField("BMR (kcal)", bmrController),
-              _buildTextField("Calories (kcal)", caloriesController),
-              _buildTextField("TDEE (kcal)", tdeeController),
-              const SizedBox(height: 20),
-              Text(
-                "Today's Summary",
-                style: TextStyle(color: appBackground(1), fontSize: 25),
-              ),
-              Text("No Data entered yet!"),
+              // _buildTextField("BMR (kcal)", bmrController),
+              // _buildTextField("Calories (kcal)", caloriesController),
+              // _buildTextField("TDEE (kcal)", tdeeController),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
@@ -90,6 +84,22 @@ class _DailyCheckinPageState extends State<DailyCheckinPage> {
                   child: const Text("Save Check-In"),
                 ),
               ),
+              SizedBox(height: 30),
+              Row(
+                spacing: 20,
+                children: [
+                  Icon(
+                    Icons.history,
+                    color: const Color.fromARGB(255, 105, 148, 240),
+                    size: 30,
+                  ),
+                  Text(
+                    "Check-in History",
+                    style: TextStyle(color: appBackground(1), fontSize: 25),
+                  ),
+                ],
+              ),
+              Text("No Data entered yet!"),
             ],
           ),
         ),
