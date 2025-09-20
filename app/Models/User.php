@@ -12,8 +12,9 @@ use App\Models\StrengthExerciseEntries;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Filament\Models\Contracts\FilamentUser;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, Notifiable, HasFactory;
 
@@ -77,5 +78,42 @@ class User extends Authenticatable
             'expires_at' => now()->addWeeks(2), // Match Sanctum's expiration if you set one
             'is_active' => true,
         ]);
+    }
+
+    public function getNameAttribute(): string
+    {
+        if ($this->first_name && $this->last_name) {
+            return trim("{$this->first_name} {$this->last_name}");
+        }
+        
+        if ($this->username) {
+            return $this->username;
+        }
+        
+        return $this->email;
+    }
+
+    // Keep this method as well for Filament v3
+    // public function getFilamentName(): string
+    // {
+    //     return $this->name; // Use the accessor we just created
+    // }
+    
+    // public function getFilamentName(): string
+    // {
+    //     if ($this->first_name && $this->last_name) {
+    //         return "{$this->first_name} {$this->last_name}";
+    //     }
+        
+    //     if ($this->username) {
+    //         return $this->username;
+    //     }
+        
+    //     return $this->email;
+    // }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->role === 'admin';
     }
 }

@@ -20,16 +20,16 @@ use App\Http\Controllers\Api\UserNotificationController;
 use App\Http\Controllers\Api\UserSessionController;
 
 // Admin UserController
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Admin\AdminFoodCategoryController;
-use App\Http\Controllers\Admin\AdminFoodItemController;
-use App\Http\Controllers\Admin\AdminExerciseCategoryController;
-use App\Http\Controllers\Admin\AdminExerciseController;
-use App\Http\Controllers\Admin\AdminReportController;
-use App\Http\Controllers\Admin\AdminSettingsController;
-use App\Http\Controllers\Admin\AdminNotificationController;
-use App\Http\Controllers\Admin\AdminQuickFoodController;
+// use App\Http\Controllers\Admin\AdminDashboardController;
+// use App\Http\Controllers\Admin\AdminUserController;
+// use App\Http\Controllers\Admin\AdminFoodCategoryController;
+// use App\Http\Controllers\Admin\AdminFoodItemController;
+// use App\Http\Controllers\Admin\AdminExerciseCategoryController;
+// use App\Http\Controllers\Admin\AdminExerciseController;
+// use App\Http\Controllers\Admin\AdminReportController;
+// use App\Http\Controllers\Admin\AdminSettingsController;
+// use App\Http\Controllers\Admin\AdminNotificationController;
+// use App\Http\Controllers\Admin\AdminQuickFoodController;
 
 
 // Authentication routes
@@ -133,88 +133,88 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-    // Admin routes
-Route::middleware(['auth:sanctum','admin'])->prefix('admin')->group(function() {
-    // Dashboard
-    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
-    // Users
-    Route::get('/users', [AdminUserController::class, 'index']);
-    Route::post('/users', [AdminUserController::class, 'store']);
-    Route::get('/users/{id}', [AdminUserController::class, 'show']);
-    Route::put('/users/{id}', [AdminUserController::class, 'update']);
-    Route::delete('/users/{id}', [AdminUserController::class, 'destroy']);
-    Route::get('/users/{id}/goals', [AdminUserController::class, 'goals']);
-    Route::get('/users/{id}/checkins', [AdminUserController::class, 'checkins']);
-    Route::patch('/users/{userId}/toggle-status', [AdminUserController::class, 'toggleStatus']);
-    Route::get('/users/{id}/stats', [AdminUserController::class, 'stats']);
+//     // Admin routes
+// Route::middleware(['auth:sanctum','admin'])->prefix('admin')->group(function() {
+//     // Dashboard
+//     Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+//     // Users
+//     Route::get('/users', [AdminUserController::class, 'index']);
+//     Route::post('/users', [AdminUserController::class, 'store']);
+//     Route::get('/users/{id}', [AdminUserController::class, 'show']);
+//     Route::put('/users/{id}', [AdminUserController::class, 'update']);
+//     Route::delete('/users/{id}', [AdminUserController::class, 'destroy']);
+//     Route::get('/users/{id}/goals', [AdminUserController::class, 'goals']);
+//     Route::get('/users/{id}/checkins', [AdminUserController::class, 'checkins']);
+//     Route::patch('/users/{userId}/toggle-status', [AdminUserController::class, 'toggleStatus']);
+//     Route::get('/users/{id}/stats', [AdminUserController::class, 'stats']);
 
-    // Food Categories
-    Route::get('/food-categories', [AdminFoodCategoryController::class, 'index']);
-    Route::post('/food-categories', [AdminFoodCategoryController::class, 'store']);
-    Route::put('/food-categories/{id}', [AdminFoodCategoryController::class, 'update']);
-    Route::delete('/food-categories/{id}', [AdminFoodCategoryController::class, 'destroy']);
+//     // Food Categories
+//     Route::get('/food-categories', [AdminFoodCategoryController::class, 'index']);
+//     Route::post('/food-categories', [AdminFoodCategoryController::class, 'store']);
+//     Route::put('/food-categories/{id}', [AdminFoodCategoryController::class, 'update']);
+//     Route::delete('/food-categories/{id}', [AdminFoodCategoryController::class, 'destroy']);
 
-    // Quick Foods
-    Route::get('/quick-foods', [AdminQuickFoodController::class, 'index']);
-    Route::get('/quick-foods/pending', [AdminQuickFoodController::class, 'pending']);
-    Route::get('/quick-foods/{id}', [AdminQuickFoodController::class, 'show']);
-    Route::post('/quick-foods/{id}/approve', [AdminQuickFoodController::class, 'approve']);
-    Route::post('/quick-foods/{id}/reject', [AdminQuickFoodController::class, 'reject']);
-    // Food Items
-    Route::get('/food-items', [AdminFoodItemController::class, 'index']);
-    Route::get('/food-items/pending', [AdminFoodItemController::class, 'pending']);
-    Route::get('/food-items/{id}', [AdminFoodItemController::class, 'show']);
-    Route::post('/food-items', [AdminFoodItemController::class, 'store']);
-    Route::put('/food-items/{id}', [AdminFoodItemController::class, 'update']);
-    Route::delete('/food-items/{id}', [AdminFoodItemController::class, 'destroy']);
+//     // Quick Foods
+//     Route::get('/quick-foods', [AdminQuickFoodController::class, 'index']);
+//     Route::get('/quick-foods/pending', [AdminQuickFoodController::class, 'pending']);
+//     Route::get('/quick-foods/{id}', [AdminQuickFoodController::class, 'show']);
+//     Route::post('/quick-foods/{id}/approve', [AdminQuickFoodController::class, 'approve']);
+//     Route::post('/quick-foods/{id}/reject', [AdminQuickFoodController::class, 'reject']);
+//     // Food Items
+//     Route::get('/food-items', [AdminFoodItemController::class, 'index']);
+//     Route::get('/food-items/pending', [AdminFoodItemController::class, 'pending']);
+//     Route::get('/food-items/{id}', [AdminFoodItemController::class, 'show']);
+//     Route::post('/food-items', [AdminFoodItemController::class, 'store']);
+//     Route::put('/food-items/{id}', [AdminFoodItemController::class, 'update']);
+//     Route::delete('/food-items/{id}', [AdminFoodItemController::class, 'destroy']);
     
-    // Exercise Categories
-    Route::get('/exercise-categories', [AdminExerciseCategoryController::class, 'index']);
-    Route::post('/exercise-categories', [AdminExerciseCategoryController::class, 'store']);
-    Route::put('/exercise-categories/{id}', [AdminExerciseCategoryController::class, 'update']);
-    Route::delete('/exercise-categories/{id}', [AdminExerciseCategoryController::class, 'destroy']);
+//     // Exercise Categories
+//     Route::get('/exercise-categories', [AdminExerciseCategoryController::class, 'index']);
+//     Route::post('/exercise-categories', [AdminExerciseCategoryController::class, 'store']);
+//     Route::put('/exercise-categories/{id}', [AdminExerciseCategoryController::class, 'update']);
+//     Route::delete('/exercise-categories/{id}', [AdminExerciseCategoryController::class, 'destroy']);
 
-    // Exercises
-    Route::get('/exercises', [AdminExerciseController::class, 'index']);
-    Route::get('/exercises/pending', [AdminExerciseController::class, 'pending']);
-    Route::get('/exercises/rejected', [AdminExerciseController::class, 'rejected']);
-    Route::get('/exercises/{id}', [AdminExerciseController::class, 'show']);
-    Route::post('/exercises', [AdminExerciseController::class, 'store']);
-    Route::put('/exercises/{id}', [AdminExerciseController::class, 'update']);
-    Route::delete('/exercises/{id}', [AdminExerciseController::class, 'destroy']);
-    Route::put('/exercises/{id}/approve', [AdminExerciseController::class, 'approve']);
-    Route::put('/exercises/{id}/reject', [AdminExerciseController::class, 'reject']);
-    Route::post('/exercises/{id}/restore', [AdminExerciseController::class, 'restore']);
+//     // Exercises
+//     Route::get('/exercises', [AdminExerciseController::class, 'index']);
+//     Route::get('/exercises/pending', [AdminExerciseController::class, 'pending']);
+//     Route::get('/exercises/rejected', [AdminExerciseController::class, 'rejected']);
+//     Route::get('/exercises/{id}', [AdminExerciseController::class, 'show']);
+//     Route::post('/exercises', [AdminExerciseController::class, 'store']);
+//     Route::put('/exercises/{id}', [AdminExerciseController::class, 'update']);
+//     Route::delete('/exercises/{id}', [AdminExerciseController::class, 'destroy']);
+//     Route::put('/exercises/{id}/approve', [AdminExerciseController::class, 'approve']);
+//     Route::put('/exercises/{id}/reject', [AdminExerciseController::class, 'reject']);
+//     Route::post('/exercises/{id}/restore', [AdminExerciseController::class, 'restore']);
 
-    // Reports
-    Route::get('/reports/users', [AdminReportController::class, 'users']);
-    Route::get('/reports/foods', [AdminReportController::class, 'food']);
-    Route::get('/reports/exercises', [AdminReportController::class, 'exercises']);
-    Route::get('/reports/system-usage', [AdminReportController::class, 'systemUsage']);
-    Route::get('/reports/user-progress/{user_id}', [AdminReportController::class, 'userProgress']);
-    Route::get('/reports/overview', [AdminReportController::class, 'overview']);
+//     // Reports
+//     Route::get('/reports/users', [AdminReportController::class, 'users']);
+//     Route::get('/reports/foods', [AdminReportController::class, 'food']);
+//     Route::get('/reports/exercises', [AdminReportController::class, 'exercises']);
+//     Route::get('/reports/system-usage', [AdminReportController::class, 'systemUsage']);
+//     Route::get('/reports/user-progress/{user_id}', [AdminReportController::class, 'userProgress']);
+//     Route::get('/reports/overview', [AdminReportController::class, 'overview']);
 
-    // Settings
-    // Route::get('/settings', [AdminSettingsController::class, 'index']);
-    // Route::get('/settings/{key}', [AdminSettingsController::class, 'show']);
-    // Route::post('/settings', [AdminSettingsController::class, 'store']);
-    // Route::put('/settings/{key}', [AdminSettingsController::class, 'update']);
-    // Route::delete('/settings/{key}', [AdminSettingsController::class, 'destroy']);
-    // Route::get('/settings/group/{group}', [AdminSettingsController::class, 'byGroup']);
-    // Route::get('/settings/groups', [AdminSettingsController::class, 'groups']);
+//     // Settings
+//     // Route::get('/settings', [AdminSettingsController::class, 'index']);
+//     // Route::get('/settings/{key}', [AdminSettingsController::class, 'show']);
+//     // Route::post('/settings', [AdminSettingsController::class, 'store']);
+//     // Route::put('/settings/{key}', [AdminSettingsController::class, 'update']);
+//     // Route::delete('/settings/{key}', [AdminSettingsController::class, 'destroy']);
+//     // Route::get('/settings/group/{group}', [AdminSettingsController::class, 'byGroup']);
+//     // Route::get('/settings/groups', [AdminSettingsController::class, 'groups']);
 
-    // Notifications
-    Route::get('/notifications', [AdminNotificationController::class, 'index']);
-    Route::post('/notifications', [AdminNotificationController::class, 'store']);
-    // Route::put('/notifications/{id}/read', [AdminNotificationController::class, 'markRead']);
-    // Route::put('/notifications/{userId}/read-all', [AdminNotificationController::class, 'markAllRead']);
-    Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy']);
-    Route::get('/notifications/stats', [AdminNotificationController::class, 'stats']);
+//     // Notifications
+//     Route::get('/notifications', [AdminNotificationController::class, 'index']);
+//     Route::post('/notifications', [AdminNotificationController::class, 'store']);
+//     // Route::put('/notifications/{id}/read', [AdminNotificationController::class, 'markRead']);
+//     // Route::put('/notifications/{userId}/read-all', [AdminNotificationController::class, 'markAllRead']);
+//     Route::delete('/notifications/{id}', [AdminNotificationController::class, 'destroy']);
+//     Route::get('/notifications/stats', [AdminNotificationController::class, 'stats']);
 
-    Route::fallback(function () {
-        return response()->json([
-            'message' => 'API endpoint not found. Please check the documentation.'
-        ], 404);
-    });
+//     Route::fallback(function () {
+//         return response()->json([
+//             'message' => 'API endpoint not found. Please check the documentation.'
+//         ], 404);
+//     });
 
-});
+// });

@@ -27,9 +27,13 @@ public function store(Request $request)
                 'exercise_type'    => 'required|in:cardiovascular,strength,other',
                 'duration_minutes' => 'required|integer|min:1',
                 'calories_burned'  => 'required|numeric|min:0',
-                'entry_date'       => 'required|date',
+                'entry_date'       => 'nullable|date',
                 'notes'            => 'nullable|string',
             ]);
+
+            if (!isset($validated['entry_date'])) {
+                $validated['entry_date'] = now()->toDateString();
+            }
 
             $entry = QuickExerciseEntries::create([
                 ...$validated,
