@@ -15,7 +15,6 @@ class ExerciseDatabaseController extends Controller
             $request->validate([
                 'name' => 'required|string|max:100',
             ]);
-            
             $exercises = ExerciseDatabase::where('exercise_name', 'LIKE', "%{$request['name']}%")
             ->where(function ($query) {
                 $query->where('created_by_user_id', auth()->id())
@@ -131,7 +130,7 @@ class ExerciseDatabaseController extends Controller
                 ->where('created_by_user_id', auth()->user()->id)
                 ->firstOrFail();
     
-            $exercise->update(...$validated());
+            $exercise->update($validated);  // initially it was "...$validated()"
     
             return response()->json([
                 'message' => 'Exercise updated successfully',

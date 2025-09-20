@@ -45,6 +45,7 @@ class ProfileController extends Controller
 
             if ($weightGoal) {
                 $weightGoal->weekly_change_kg = $weeklyKg;
+                $weightGoal->target_value = $user->profile->goal_weight_kg;
                 $weightGoal->save();
             } else {
                 // Create a simple weight goal because user expressed a weekly target.
@@ -60,6 +61,7 @@ class ProfileController extends Controller
                     'label' => $label,
                     'reasons' => [],
                     'weekly_change_kg' => $weeklyKg,
+                    'target_value' => $user->profile->goal_weight_kg,
                     'is_primary' => true,
                     'active' => true,
                 ]);

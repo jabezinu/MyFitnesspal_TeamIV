@@ -1,0 +1,16 @@
+
+
+### User Registration
+POST http://localhost:8000/api/register
+Content-Type: application/json
+
+{
+    "email": "user1@example.com",
+    "password": "password123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "date_of_birth": "1995-06-10",
+    "gender": "male",
+    "height_cm": 175,
+    "activity_level": "moderate"
+}

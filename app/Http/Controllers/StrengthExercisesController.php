@@ -24,7 +24,7 @@ class StrengthExercisesController extends Controller
         try {
             $validated = $request->validate([
                 'exercise_id'=> 'required|exists:exercise_databases,exercise_id',
-                'entry_date'=> 'required|date',
+                'entry_date'=> 'nullable|date',
                 'sets'=> 'required|integer|min:1',
                 'reps_per_set' => 'required|array|size:' . $request->input('sets'),
                 'reps_per_set.*'=> 'integer|min:1',
@@ -35,6 +35,10 @@ class StrengthExercisesController extends Controller
                 'calories_burned'=> 'required|numeric|min:0',
                 'notes'=> 'nullable|string',
             ]);
+            
+            if (!isset($validated['entry_date'])) {
+                $validated['entry_date'] = now()->toDateString();
+            }
 
             $entry = StrengthExerciseEntries::create([
                 ...$validated,

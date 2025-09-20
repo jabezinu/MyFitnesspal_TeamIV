@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+
 use App\Models\CardioExerciseEntries;
 use App\Models\ExerciseDatabase;
 use App\Models\QuickExerciseEntries;
@@ -19,6 +20,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $this->call([
+            FoodCategoriesSeeder::class,
+            FoodItemsSeeder::class,
+        ]);
+
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
@@ -28,5 +40,6 @@ class DatabaseSeeder extends Seeder
         // CardioExerciseEntries::factory(5)->create();
         // StrengthExerciseEntries::factory(5)->create();
         QuickExerciseEntries::factory(5)->create();
+
     }
 }

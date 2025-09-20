@@ -33,7 +33,7 @@ class CardioExercisesController extends Controller
         try{    
             $validated = $request->validate([
                 'exercise_id'=> 'required|exists:exercise_databases,exercise_id',
-                'entry_date'=> 'required|date',
+                'entry_date'=> 'nullable|date',
                 'duration_minutes'=> 'required|integer|min:1',
                 'calories_burned'=> 'required|numeric|min:0',
                 'distance'=> 'required|numeric|min:0',
@@ -41,6 +41,10 @@ class CardioExercisesController extends Controller
                 'intensity_level'=> 'required|in:low,moderate,high',
                 'notes'=> 'nullable|string',
             ]);
+
+            if (!isset($validated['entry_date'])) {
+                $validated['entry_date'] = now()->toDateString();
+            }
 
             $entry = CardioExerciseEntries::create([
                 ...$validated,

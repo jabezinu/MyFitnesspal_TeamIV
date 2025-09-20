@@ -17,12 +17,15 @@ class ExerciseDatabase extends Model
     protected $fillable = [
         'exercise_name', 'catagory_id', 'exercise_type', 'calories_per_minute',
         'description', 'instructions', 'muscle_groups', 'equipment_needed', 
-        'difficulty_level', 'created_by_user_id'];
+        'difficulty_level', 'created_by_user_id', 'is_rejected','rejected_at','rejection_reason','is_verified',
+        'is_public'];
 
     protected $casts = [
         'muscle_groups'=>'array',
         'is_verified'=>'boolean',
-        'is_public'=>'boolean'
+        'is_public'=>'boolean',
+        'is_rejected' => 'boolean', 
+        'rejected_at' => 'datetime'
     ];
 
     public function catagory(){
@@ -39,5 +42,15 @@ class ExerciseDatabase extends Model
 
     public function strength(){
         return $this->hasMany(StrengthExerciseEntries::class,'exercise_id', 'exercise_id');
+    }
+
+    public function scopeNotRejected($query)
+    {
+        return $query->where('is_rejected', false);
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('is_rejected', true);
     }
 }

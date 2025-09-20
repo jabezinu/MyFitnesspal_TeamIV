@@ -19,7 +19,7 @@ class QuickExercisesController extends Controller
         }
     }
 
- public function store(Request $request)
+public function store(Request $request)
     {
         try {
             $validated = $request->validate([
@@ -27,9 +27,13 @@ class QuickExercisesController extends Controller
                 'exercise_type'    => 'required|in:cardiovascular,strength,other',
                 'duration_minutes' => 'required|integer|min:1',
                 'calories_burned'  => 'required|numeric|min:0',
-                'entry_date'       => 'required|date',
+                'entry_date'       => 'nullable|date',
                 'notes'            => 'nullable|string',
             ]);
+
+            if (!isset($validated['entry_date'])) {
+                $validated['entry_date'] = now()->toDateString();
+            }
 
             $entry = QuickExerciseEntries::create([
                 ...$validated,
@@ -45,7 +49,7 @@ class QuickExercisesController extends Controller
         }
     }
 
- public function show($id)
+public function show($id)
     {
         try {
             $entry = QuickExerciseEntries::where('quick_entry_id', $id)

@@ -1,61 +1,270 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FitnessPal API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based RESTful API for a fitness tracking application that helps users manage their nutrition, exercise, and wellness goals.
 
-## About Laravel
+## 📋 Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+FitnessPal API is a backend system that powers a fitness tracking application with features for food logging, exercise tracking, goal setting, and progress monitoring. The API supports both regular users and administrative functions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### User Features
+- **User Authentication & Registration** - JWT-based authentication with multi-step registration
+- **Profile Management** - Complete user profiles with fitness goals and preferences
+- **Food Tracking** - Log meals with detailed nutritional information
+- **Exercise Tracking** - Record cardio, strength, and custom exercises
+- **Goal Setting** - Set and track fitness and nutrition goals
+- **Progress Monitoring** - Weight tracking and progress reports
+- **Water Intake Tracking** - Monitor daily water consumption
 
-## Learning Laravel
+### Admin Features
+- **Dashboard Analytics** - Comprehensive system statistics and overview
+- **User Management** - Complete CRUD operations for user accounts
+- **Content Moderation** - Approve/reject user-submitted food and exercise entries
+- **System Settings** - Manage application configuration
+- **Reporting** - Detailed analytics and usage reports
+- **Notification System** - Send notifications to users
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠 Technology Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend Framework**: Laravel 10+
+- **Authentication**: Laravel Sanctum (JWT tokens)
+- **Database**: MySQL
+- **API Documentation**: OpenAPI/Swagger (to be implemented)
+- **Validation**: Laravel Form Request Validation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Installation
 
-## Laravel Sponsors
+### Prerequisites
+- PHP 8.1 or higher
+- Composer
+- MySQL/PostgreSQL database
+- Web server (Apache/Nginx)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Setup Instructions
 
-### Premium Partners
+1. **Clone the repository**
+   ```bash
+   git clone -b fitnesspal-api https://github.com/jabezinu/MyFitnesspal_TeamIV.git
+   cd fitnesspal-api
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Configure database**
+   Edit `.env` file with your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=fitnesspal
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-## Code of Conduct
+5. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Seed database (optional)**
+   ```bash
+   php artisan db:seed --class=ExerciseMasterSeeder
+   php artisan db:seed --class=DatabaseSeeder
+   ```
 
-## Security Vulnerabilities
+7. **Install Laravel Sanctum**
+   ```bash
+   php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+   php artisan migrate
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+8. **Generate API keys**
+   ```bash
+   php artisan passport:install
+   ```
 
-## License
+9. **Start development server**
+   ```bash
+   php artisan serve
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🔧 Configuration
+
+### Environment Variables
+
+Update these values in your `.env` file:
+
+```env
+APP_NAME=FitnessPal
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=fitnesspal
+DB_USERNAME=root
+DB_PASSWORD=
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1
+SESSION_DOMAIN=localhost
+```
+
+### CORS Configuration
+
+Update `config/cors.php` to allow your frontend domain:
+
+```php
+'paths' => ['api/*', 'sanctum/csrf-cookie'],
+'allowed_methods' => ['*'],
+'allowed_origins' => ['http://localhost:3000'], // Your frontend URL
+'allowed_origins_patterns' => [],
+'allowed_headers' => ['*'],
+'exposed_headers' => [],
+'max_age' => 0,
+'supports_credentials' => true,
+```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/login` | User login |
+| POST | `/api/register/start` | Start registration process |
+| POST | `/api/register/save-step/{flowId}` | Save registration step |
+| POST | `/api/register/complete/{flowId}` | Complete registration |
+| GET | `/api/me` | Get current user info |
+| POST | `/api/logout` | User logout |
+
+### User Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/profile` | Get user profile |
+| PUT | `/api/profile` | Update user profile |
+| GET | `/api/goals` | Get user goals |
+| POST | `/api/goals` | Create a new goal |
+| PUT | `/api/goals/{goal}` | Update a goal |
+| DELETE | `/api/goals/{goal}` | Delete a goal |
+
+### Food Tracking Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/food-diary` | Get food diary entries |
+| POST | `/api/food-diary` | Create food diary entry |
+| DELETE | `/api/food-diary/{id}` | Delete food diary entry |
+| GET | `/api/food-diary/summary` | Get daily nutrition summary |
+| GET | `/api/foods/search` | Search food items |
+
+### Exercise Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/exercises` | Get exercises |
+| POST | `/api/exercises` | Create exercise |
+| GET | `/api/exercises/{id}` | Get exercise details |
+| PUT | `/api/exercises/{id}` | Update exercise |
+| DELETE | `/api/exercises/{id}` | Delete exercise |
+
+### Report Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/reports/daily` | Get daily report |
+| GET | `/api/reports/summary` | Get summary report |
+| GET | `/api/reports/weight-trend` | Get weight trend |
+| GET | `/api/reports/goals-comparison` | Compare goals vs actual |
+
+### Admin Endpoints
+
+All admin endpoints are prefixed with `/api/admin` and require admin privileges.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/admin/dashboard` | Admin dashboard stats |
+| GET | `/admin/users` | Get all users |
+| POST | `/admin/users` | Create new user |
+| GET | `/admin/users/{id}` | Get user details |
+| PUT | `/admin/users/{id}` | Update user |
+| DELETE | `/admin/users/{id}` | Delete user |
+
+For complete API documentation, import the Postman collection or view the OpenAPI specification.
+
+## 🗃 Database Schema
+
+The application uses the following main tables:
+
+- `users` - User accounts and basic info
+- `user_profiles` - Extended user profile information
+- `user_goals` - User fitness goals
+- `food_items` - Food database
+- `food_diary_entries` - User food consumption records
+- `exercise_databases` - Exercise database
+- `cardio_exercise_entries` - Cardio workout records
+- `strength_exercise_entries` - Strength workout records
+- `check_ins` - Weight and progress check-ins
+- `water_entries` - Water consumption records
+
+## 🚀 Deployment
+
+### Production Deployment(to be implemeted)
+
+1. **Environment setup**
+   ```bash
+   composer install --optimize-autoloader --no-dev
+   php artisan optimize
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+2. **Set up environment variables**
+   Update `.env` with production values:
+   ```env
+   APP_ENV=production
+   APP_DEBUG=false
+   ```
+
+3. **Database migration**
+   ```bash
+   php artisan migrate --force
+   ```
+
+4. **Storage link**
+   ```bash
+   php artisan storage:link
+   ```
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---

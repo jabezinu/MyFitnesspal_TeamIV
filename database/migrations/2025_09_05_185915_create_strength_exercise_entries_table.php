@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('exercise_id')->references('exercise_id')->on('exercise_database')->onDelete('cascade');
+            $table->foreign('exercise_id')->references('exercise_id')->on('exercise_databases')->onDelete('cascade');
             
             $table->timestamps();
         });
