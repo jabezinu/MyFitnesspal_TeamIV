@@ -36,7 +36,7 @@ class More extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Leta Dejene",
+                        "User Name",
                         style: TextStyle(color: appBackground(1), fontSize: 35),
                       ),
                     ],

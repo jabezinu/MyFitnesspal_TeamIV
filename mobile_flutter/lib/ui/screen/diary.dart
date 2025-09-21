@@ -216,11 +216,18 @@ Widget _BuildTabelDisplay(String itemType) {
 
           InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/food_selection',
-                arguments: itemType,
-              );
+              itemType != "Exercise"
+                  ? Navigator.pushNamed(
+                    context,
+                    '/food_selection',
+                    arguments: itemType,
+                  )
+                  : showDialog(
+                    context: context,
+                    builder:
+                        (BuildContext context) =>
+                            _biuldExerciseSelectionDialog(context),
+                  );
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -265,6 +272,82 @@ Widget _BuildFoodList(String itemType, Map food) {
         ),
         Text(food["kcal"].toString(), style: TextStyle(color: appGrey(1))),
       ],
+    ),
+  );
+}
+
+Widget _biuldExerciseSelectionDialog(BuildContext context) {
+  return Dialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    child: Container(
+      padding: EdgeInsets.all(20),
+      height: 250,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 20,
+        children: [
+          Text(
+            "Select Exercise Type",
+            style: TextStyle(
+              color: appBackground(1),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/exercise_selection',
+                arguments: "Cardio",
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: appBackground(0.81),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 6,
+              shadowColor: appBackground(1),
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            label: Text("Cardio"),
+            icon: Icon(Icons.directions_run_rounded, size: 30),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/exercise_selection',
+                arguments: "Strength",
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: appBackground(0.81),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 6,
+              shadowColor: appBackground(1),
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            label: Text("Strength"),
+            icon: Icon(Icons.fitness_center_rounded, size: 30),
+          ),
+        ],
+      ),
     ),
   );
 }

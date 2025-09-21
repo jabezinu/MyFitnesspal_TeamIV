@@ -17,6 +17,9 @@ class _FoodSelectionState extends State<FoodSelection> {
 
   _FoodSelectionState(this.foodType);
 
+  final List _topButtons = ["All", "My Foods", "Create Food"];
+  int _pageIndex = 0;
+
   final List<String> items = [
     // just a dummy data
     "Apple",
@@ -80,27 +83,75 @@ class _FoodSelectionState extends State<FoodSelection> {
         ),
       ),
 
-      body: Column(
-        spacing: 20,
-        children: [
-          SizedBox(height: 1),
-          buildSearchAnchor(items),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 20,
+          children: [
+            SizedBox(height: 1),
+            buildSearchAnchor(items),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(onPressed: () {}, child: Text("All")),
-              TextButton(onPressed: () {}, child: Text("My Foods")),
-              TextButton(onPressed: () {}, child: Text("Create Food")),
-            ],
-          ),
-          SizedBox(
-            // color: Colors.red,
-            height: screenSize.height / 1.5,
-            child: ListView(children: [buildListShowingRow()]),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                for (var item in _topButtons)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _pageIndex = _topButtons.indexOf(item);
+                      });
+                    },
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border:
+                            _pageIndex == _topButtons.indexOf(item)
+                                ? Border(
+                                  bottom: BorderSide(
+                                    width: 5,
+                                    color: appBackground(1),
+                                  ),
+                                )
+                                : Border(),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(item),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            [
+              _biuldAllFoodShow(context),
+              _biuldMyFoodShow(context),
+              _biuldCreateFood(context),
+            ][_pageIndex],
+          ],
+        ),
       ),
     );
   }
+}
+
+Widget _biuldAllFoodShow(BuildContext context) {
+  Size screenSize = MediaQuery.sizeOf(context);
+  return SizedBox(
+    // color: Colors.red,
+    height: screenSize.height / 1.5,
+    child: ListView(children: [buildListShowingRow()]),
+  );
+}
+
+Widget _biuldMyFoodShow(BuildContext context) {
+  Size screenSize = MediaQuery.sizeOf(context);
+  return SizedBox(
+    // color: Colors.red,
+    height: screenSize.height / 1.5,
+    child: ListView(children: [buildListShowingRow()]),
+  );
+}
+
+Widget _biuldCreateFood(BuildContext context) {
+  Size screenSize = MediaQuery.sizeOf(context);
+  return Center(child: Text("Create Food"));
 }
