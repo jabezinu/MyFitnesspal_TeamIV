@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
+import 'package:myfitnesspal/data/logic/fetch_food.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatefulWidget {
@@ -22,7 +23,7 @@ class _HomePage extends State<Home> {
           onTap: () => Navigator.pushNamed(context, "/profile"),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage('https://example.com/profile.jpg'),
+            // backgroundImage: NetworkImage('https://example.com/profile.jpg'),
           ),
         ),
         title: Text(
@@ -31,7 +32,12 @@ class _HomePage extends State<Home> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              FoodService foodsKey = FoodService();
+              List me = await foodsKey.getFoodKeywords();
+
+              print(me);
+            },
             icon: Icon(Icons.notifications_active_outlined),
           ),
         ],

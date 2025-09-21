@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
+import 'package:myfitnesspal/data/logic/fetch_food.dart';
 import 'package:myfitnesspal/ui/widgets/list_show_item.dart';
 import 'package:myfitnesspal/ui/widgets/search_anchor.dart';
 
@@ -20,17 +21,7 @@ class _FoodSelectionState extends State<FoodSelection> {
   final List _topButtons = ["All", "My Foods", "Create Food"];
   int _pageIndex = 0;
 
-  final List<String> items = [
-    // just a dummy data
-    "Apple",
-    "Banana",
-    "Cherry",
-    "Date",
-    "Elderberry",
-    "Fig",
-    "Grape",
-    "Honeydew",
-  ];
+  FoodService foodService = FoodService();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +79,21 @@ class _FoodSelectionState extends State<FoodSelection> {
           spacing: 20,
           children: [
             SizedBox(height: 1),
-            buildSearchAnchor(items),
+            FutureBuilder(
+              future: foodService.getFoodKeywords(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(
+                    color: appBackground(1),
+                    backgroundColor: const Color.fromARGB(113, 4, 126, 139),
+                  );
+                } else if (snapshot.hasData) {
+                  return buildSearchAnchor(snapshot.data!);
+                } else {
+                  return buildSearchAnchor(["Content Not loaded"]);
+                }
+              },
+            ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

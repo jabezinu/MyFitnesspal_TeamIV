@@ -66,6 +66,8 @@ flutter:
     - assets/images/bottle_outline_blue.png
     - assets/images/bottle_outline.png
     
+    - assets/data/search.pl.json
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
