@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
+import 'package:myfitnesspal/logic/diary_items/diary_items_bloc.dart';
+import 'package:myfitnesspal/logic/diary_items/diary_items_state.dart';
 
 class Diary extends StatelessWidget {
   const Diary({super.key});
@@ -178,71 +180,70 @@ Widget _BuildCaloryCal() {
 }
 
 Widget _BuildTabelDisplay(String itemType) {
-  return Column(
-    children: [
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        color: appWhite(1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              itemType,
-              style: TextStyle(
-                color: appBackground(1),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+  return BlocBuilder<DiaryItemsBloc, DiaryItemsState>(
+    builder: (context, state) {
+      return Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            color: appWhite(1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  itemType,
+                  style: TextStyle(
+                    color: appBackground(1),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                Text(
+                  state.diaryItem[itemType]!["kcal"].toString(),
+                  style: TextStyle(
+                    color: appBackground(1),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              "197",
-              style: TextStyle(
-                color: appBackground(1),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            // BlocBuilder(
-            //   builder: (context, state) {
-            //     return Text(
-            //       "197",
-            //       style: TextStyle(
-            //         color: appBackground(1),
-            //         fontSize: 20,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     );
-            //   },
-            // ),
-          ],
-        ),
-      ),
-
-      _BuildFoodList(),
-
-      InkWell(
-        onTap: () {},
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-          color: appWhite(1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "ADD FOOD",
-                style: TextStyle(color: Colors.blue, fontSize: 16),
-              ),
-              Icon(Icons.more_horiz_rounded),
-            ],
           ),
-        ),
-      ),
-    ],
+
+          for (var foods in state.diaryItem[itemType]!["food"])
+            _BuildFoodList(itemType, foods),
+
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/food_selection',
+                arguments: itemType,
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              color: appWhite(1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    itemType != "Exercise" ? "ADD FOOD" : "ADD Exercise",
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                  Icon(Icons.more_horiz_rounded),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    },
   );
 }
 
-Widget _BuildFoodList() {
+Widget _BuildFoodList(String itemType, Map food) {
   return Container(
     color: appWhite(1),
     margin: EdgeInsets.symmetric(vertical: 1),
@@ -251,12 +252,18 @@ Widget _BuildFoodList() {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 2,
           children: [
-            Text("Shiro Wat", style: TextStyle(fontSize: 18)),
-            Text("1.0 cup", style: TextStyle(color: appGrey(1))),
+            Text(food["name"], style: TextStyle(fontSize: 18)),
+            Text(
+              food["amount"].toString() +
+                  (itemType != "Exercise" ? " cup" : " min"),
+              style: TextStyle(color: appGrey(1)),
+            ),
           ],
         ),
-        Text("197", style: TextStyle(color: appGrey(1))),
+        Text(food["kcal"].toString(), style: TextStyle(color: appGrey(1))),
       ],
     ),
   );

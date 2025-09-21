@@ -209,7 +209,7 @@ Widget _buildCaloriesCard() {
                   animateToInitialPercent: true,
                   animation: true,
                   restartAnimation: true,
-                  animationDuration: 900,
+                  animationDuration: 600,
                   center: Padding(
                     padding: const EdgeInsets.only(top: 50.0),
                     child: Column(
@@ -231,7 +231,7 @@ Widget _buildCaloriesCard() {
                   ),
                 ),
                 Column(
-                  spacing: 3,
+                  spacing: 5,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (var item in someData)
@@ -244,6 +244,7 @@ Widget _buildCaloriesCard() {
                             color: const Color.fromARGB(255, 243, 33, 86),
                           ),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 item["label"],
@@ -251,6 +252,7 @@ Widget _buildCaloriesCard() {
                               ),
                               Text(
                                 "2520",
+                                textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: appBackground(1),
                                   fontSize: 16,
