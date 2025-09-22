@@ -26,18 +26,16 @@ class _GoalsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // small helper to create the trailing blue action text
     Text trailingText(String text) => Text(
       text,
       style: const TextStyle(
-        color: Color(0xFF1E88E5), // blue like screenshot
+        color: Color(0xFF1E88E5),
         fontWeight: FontWeight.w500,
       ),
     );
 
     return ListView(
       children: [
-        // Top simple rows
         _settingsRow(
           title: 'Starting Weight',
           trailing: trailingText('55 kg on 24 Aug 2025'),
