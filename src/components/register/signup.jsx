@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate instead of Link
-import calLogLogo from "../assets/img/calLogLogo.png"; // Your logo
-import main2 from "../assets/img/main2.jpg";
-import main4 from "../assets/img/main4.jpg";
-import main6 from "../assets/img/main6.jpg";
+import calLogLogo from "../../assets/img/calLogLogo.png"; // Your logo
+import main2 from "../../assets/img/main2.jpg";
+import main4 from "../../assets/img/main4.jpg";
+import main6 from "../../assets/img/main6.jpg";
 
 const Signup = () => {
   const navigate = useNavigate(); // hook to navigate programmatically

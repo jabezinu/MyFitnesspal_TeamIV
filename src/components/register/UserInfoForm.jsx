@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast"; // <-- import toast
-import calLogLogo from "../assets/img/calLogLogo.png";
+import calLogLogo from "../../assets/img/calLogLogo.png";
 
 const UserInfoForm = () => {
   const [firstName, setFirstName] = useState("");

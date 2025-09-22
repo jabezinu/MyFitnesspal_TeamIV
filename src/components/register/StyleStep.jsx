@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import calLogLogo from "../assets/img/calLogLogo.png";
+import calLogLogo from "../../assets/img/calLogLogo.png";
 
 const StyleStep = () => {
   const navigate = useNavigate();

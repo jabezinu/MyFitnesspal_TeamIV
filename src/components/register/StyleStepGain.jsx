@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import calLogLogo from "../assets/img/calLogLogo.png";
+import calLogLogo from "../../assets/img/calLogLogo.png"; // Fixed import name
 
-const StyleStepMaintain = () => {
+const StyleStepGain = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const { firstName, lastName, goal, barriers } = location.state || {};
 
   useEffect(() => {
@@ -16,7 +15,7 @@ const StyleStepMaintain = () => {
   }, [firstName, lastName, goal, navigate]);
 
   const handleBack = () => {
-    navigate("/signup/barriers-maintain", {
+    navigate("/signup/barriers-gain", {
       state: { firstName, lastName, goal, barriers },
     });
   };
@@ -43,33 +42,30 @@ const StyleStepMaintain = () => {
 
         {/* Step Indicators */}
         <div className="flex justify-center gap-2 mb-6">
-          {Array(5)
-            .fill(0)
-            .map((_, i) => (
-              <span
-                key={i}
-                className={`w-3 h-3 rounded-full ${
-                  i < 5 ? "bg-[#1D2D44]" : "bg-gray-300"
-                }`}
-              />
-            ))}
+          {[1, 2, 3, 4, 5].map((step) => (
+            <span
+              key={step}
+              className={`w-3 h-3 rounded-full ${
+                step < 4 ? "bg-[#1D2D44]" : "bg-gray-300"
+              }`}
+            />
+          ))}
         </div>
 
-        {/* Title */}
         <h2 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-          Staying consistent is key to maintaining your weight.
+          We understand. Life can sometimes make it hard to focus on your health
+          goals.
         </h2>
 
-        {/* Paragraphs */}
         <p className="text-sm text-gray-600 mb-4 text-center">
-          Life can throw challenges your way, but we’ll help you navigate them.
+          That's why we're here to help you navigate challenges and stay on
+          track. We've guided countless people toward achieving their wellness
+          dreams.
         </p>
         <p className="text-sm text-gray-600 mb-8 text-center">
-          Let’s dive into the details so we can create a personalized plan that
-          works for you.
+          Let's dive into the details so we can create your personalized plan.
         </p>
 
-        {/* Buttons */}
         <div className="flex gap-4 justify-center">
           <button
             onClick={handleBack}
@@ -89,4 +85,4 @@ const StyleStepMaintain = () => {
   );
 };
 
-export default StyleStepMaintain;
+export default StyleStepGain;

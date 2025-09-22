@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { GiFire } from "react-icons/gi";
 import { MdOutlineFitnessCenter } from "react-icons/md";
 import { FaRunning } from "react-icons/fa";
@@ -8,42 +8,120 @@ import { ProfileContext } from "../../context/ProfileContext";
 
 const HomeSummary = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { profile } = useContext(ProfileContext);
   const [activeTab, setActiveTab] = useState("Home Summary");
 
- 
+  // Get data passed from CreateUsername component
+  const userDataFromSignup = location.state || {};
+
   const [userData, setUserData] = useState({
-    bmr: 0,
-    caloriesGoal: 0,
-    tdee: 0,
+    bmr: userDataFromSignup.bmr || 0,
+    caloriesGoal: userDataFromSignup.calorieGoal || 0,
+    tdee: userDataFromSignup.tdee || 0,
+    profile: {
+      height_cm: userDataFromSignup.height || 0,
+      current_weight_kg: userDataFromSignup.weight || 0,
+      goal_weight_kg: userDataFromSignup.goal_weight_kg || 0,
+      sex: userDataFromSignup.gender || "",
+      dob: userDataFromSignup.dob || "",
+      activity_level: userDataFromSignup.activity_level || "moderate",
+    },
+    macros: userDataFromSignup.macros || {
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+    },
   });
 
-  useEffect(() => {
-    
-    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+  // Calculate age from date of birth
+  const calculateAge = (dob) => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    setUserData({
-      bmr: Math.round(currentUser.bmr) || 0,
-      caloriesGoal: Math.round(currentUser.caloriesGoal) || 0,
-      tdee: Math.round(currentUser.dailyCalories) || 0, // dailyCalories from ResultsPage is TDEE
-    });
-  }, []);
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
+  // Convert kg to lbs for display
+  const kgToLbs = (kg) => Math.round(kg * 2.20462);
+
+  // Convert cm to feet and inches for display
+  const cmToFeetInches = (cm) => {
+    const totalInches = cm / 2.54;
+    const feet = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return { feet, inches };
+  };
+
+  // Load additional user data if needed, but prioritize data from signup
+  useEffect(() => {
+    // If we have data from signup, use that as primary source
+    if (userDataFromSignup.bmr) {
+      setUserData({
+        bmr: userDataFromSignup.bmr,
+        caloriesGoal: userDataFromSignup.calorieGoal,
+        tdee: userDataFromSignup.tdee,
+        profile: {
+          height_cm: userDataFromSignup.height || 0,
+          current_weight_kg: userDataFromSignup.weight || 0,
+          goal_weight_kg: userDataFromSignup.goal_weight_kg || 0,
+          sex: userDataFromSignup.gender || "",
+          dob: userDataFromSignup.dob || "",
+          activity_level: userDataFromSignup.activity_level || "moderate",
+        },
+        macros: userDataFromSignup.macros || {
+          protein: 0,
+          fat: 0,
+          carbs: 0,
+        },
+      });
+    } else {
+      // Fallback to localStorage if no signup data
+      const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+      const userProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
+      const profileData = currentUser.profile || {};
+
+      setUserData({
+        bmr: Math.round(profileData.bmr) || 0,
+        caloriesGoal: Math.round(profileData.daily_calorie_goal) || 0,
+        tdee: Math.round(profileData.tdee) || 0,
+        profile: {
+          height_cm: profileData.height_cm || 0,
+          current_weight_kg: profileData.current_weight_kg || 0,
+          goal_weight_kg: profileData.goal_weight_kg || 0,
+          sex: profileData.sex || "",
+          dob: profileData.dob || "",
+          activity_level: profileData.activity_level || "",
+        },
+      });
+    }
+  }, [userDataFromSignup]);
 
   const [userGoals, setUserGoals] = useState(
     JSON.parse(localStorage.getItem("userGoals")) || {
-      calories: "",
-      carbs: "",
-      protein: "",
-      fat: "",
+      calories: userDataFromSignup.calorieGoal || "",
+      carbs: userDataFromSignup.macros?.carbs || "",
+      protein: userDataFromSignup.macros?.protein || "",
+      fat: userDataFromSignup.macros?.fat || "",
       water: "",
-      weightLoss: "0.5",
+      weightLoss: userDataFromSignup.weeklyGoal || "0.5",
       exerciseDays: "3",
       minutes: "30",
     }
   );
 
   const [checkIn, setCheckIn] = useState({
-    weight: "",
+    weight: userDataFromSignup.weight || "",
     steps: "",
     sleep: "",
     mood: "",
@@ -70,11 +148,12 @@ const HomeSummary = () => {
     const newEntry = {
       ...checkIn,
       date: today,
-      // Round the values when saving
+      // Include the current metrics in the check-in
+      bmr: userData.bmr,
+      caloriesGoal: userData.caloriesGoal,
+      tdee: userData.tdee,
+      // Round the weight value when saving
       weight: checkIn.weight ? Math.round(checkIn.weight * 10) / 10 : "",
-      bmr: checkIn.bmr ? Math.round(checkIn.bmr) : "",
-      calories: checkIn.calories ? Math.round(checkIn.calories) : "",
-      tdee: checkIn.tdee ? Math.round(checkIn.tdee) : "",
     };
 
     const updatedHistory = [...checkInHistory, newEntry];
@@ -82,13 +161,6 @@ const HomeSummary = () => {
     localStorage.setItem("checkInHistory", JSON.stringify(updatedHistory));
 
     alert("✅ Check-in saved successfully!");
-
-    setCheckIn({
-      weight: "",
-      steps: "",
-      sleep: "",
-      mood: "",
-    });
   };
 
   const handleTabClick = (tab) => {
@@ -101,17 +173,34 @@ const HomeSummary = () => {
     }
   };
 
+  // Format activity level for display
+  const formatActivityLevel = (level) => {
+    const levelMap = {
+      sedentary: "Sedentary",
+      light: "Lightly Active",
+      moderate: "Moderately Active",
+      active: "Very Active",
+      very_active: "Extremely Active",
+    };
+    return levelMap[level] || level;
+  };
+
   const renderTabContent = () => {
+    const height = cmToFeetInches(userData.profile.height_cm);
+    const age = calculateAge(userData.profile.dob);
+    const activityLevel = formatActivityLevel(userData.profile.activity_level);
+
     switch (activeTab) {
       case "Home Summary":
         return (
           <>
-            <div className="flex flex-wrap justify-between items-start gap-8 mt-8 max-w-6xl mx-auto px-4 ">
+            <div className="flex flex-wrap justify-between items-start gap-8 mt-8 max-w-6xl mx-auto px-4">
+              {/* Health Metrics Explanation */}
               <motion.div
                 className="bg-gray-200 rounded-xl shadow-lg p-6 flex-1 max-w-sm"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <h2 className="text-xl font-bold text-[#1D2D44] mb-2">
                   Understanding Your Results
@@ -124,8 +213,15 @@ const HomeSummary = () => {
                   <strong>Calories Goal</strong> is your suggested daily target
                   based on goals.
                 </p>
+                <button
+                  onClick={() => navigate("/edit-profile")}
+                  className="mt-4 px-4 py-2 bg-[#1D2D44] text-white rounded-lg text-sm hover:bg-[#142030] transition"
+                >
+                  Update My Profile
+                </button>
               </motion.div>
 
+              {/* Health Metrics Cards */}
               <div className="flex flex-row flex-wrap justify-center gap-6 flex-1">
                 <motion.div
                   className="flex flex-col items-center gap-3 p-6 w-48 rounded-2xl text-[#1D2D44] bg-gradient-to-br from-[#A1C4FD] to-[#C2E9FB] shadow-lg cursor-pointer"
@@ -174,6 +270,53 @@ const HomeSummary = () => {
               </div>
             </div>
 
+            {/* Macro Nutrients Summary */}
+            {userData.macros && (
+              <motion.div
+                className="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto mt-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <h2 className="text-2xl font-bold text-[#1D2D44] mb-4">
+                  Your Macro Goals
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-blue-800">
+                      Protein
+                    </h3>
+                    <p className="text-2xl font-bold">
+                      {userData.macros.protein}g
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {(userData.macros.protein * 4).toLocaleString()} calories
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-green-800">
+                      Carbs
+                    </h3>
+                    <p className="text-2xl font-bold">
+                      {userData.macros.carbs}g
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {(userData.macros.carbs * 4).toLocaleString()} calories
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-yellow-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-yellow-800">
+                      Fat
+                    </h3>
+                    <p className="text-2xl font-bold">{userData.macros.fat}g</p>
+                    <p className="text-sm text-gray-600">
+                      {(userData.macros.fat * 9).toLocaleString()} calories
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Promotions / Ads */}
             <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto mt-6">
               {/* Ad 1 */}
@@ -201,58 +344,6 @@ const HomeSummary = () => {
                   className="w-40 h-40 object-cover rounded-lg shadow-md flex-shrink-0"
                 />
               </motion.div>
-
-              {/* Ad 2 */}
-              <motion.div
-                className="bg-gradient-to-r from-[#FF6B6B] to-[#FFD93D] rounded-xl shadow-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 w-full md:w-[48%] hover:scale-105 transition-transform duration-500"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    🔥 Boost Your Progress!
-                  </h2>
-                  <p className="text-white text-lg max-w-md">
-                    Try premium meal plans and workout programs for faster
-                    results.
-                  </p>
-                  <button className="mt-4 px-6 py-2 bg-white text-[#1D2D44] rounded-lg shadow-md hover:bg-gray-100 transition">
-                    Learn More
-                  </button>
-                </div>
-                <img
-                  src="https://images.unsplash.com-1605296867304-46d5465a13f1?w=400&q=80&auto=format"
-                  alt="Healthy Food"
-                  className="w-40 h-40 object-cover rounded-lg shadow-md flex-shrink-0"
-                />
-              </motion.div>
-
-              {/* Ad 3 */}
-              <motion.div
-                className="bg-gradient-to-r from-[#1D2D44] to-[#3C4A6B] rounded-xl shadow-xl p-6 flex flex-col md:flex-row-reverse items-center justify-between gap-4 w-full md:w-[48%] hover:scale-105 transition-transform duration-500"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    🏋️ Join Our Fitness Challenge!
-                  </h2>
-                  <p className="text-white text-lg max-w-md">
-                    Sign up today for a 30-day transformation challenge with top
-                    trainers.
-                  </p>
-                  <button className="mt-4 px-6 py-2 bg-white text-[#1D2D44] rounded-lg shadow-md hover:bg-gray-100 transition">
-                    Sign Up Now
-                  </button>
-                </div>
-                <img
-                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80&auto=format"
-                  alt="Workout"
-                  className="w-40 h-40 object-cover rounded-lg shadow-md flex-shrink-0"
-                />
-              </motion.div>
             </div>
           </>
         );
@@ -271,18 +362,6 @@ const HomeSummary = () => {
                   <span>🔥</span> Nutrition Goals
                 </h3>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
-                      Daily Calories
-                    </label>
-                    <input
-                      type="number"
-                      name="calories"
-                      value={userGoals.calories}
-                      onChange={handleGoalChange}
-                      className="w-full p-2 border rounded-lg"
-                    />
-                  </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="block text-gray-700 font-semibold mb-1">
@@ -320,19 +399,6 @@ const HomeSummary = () => {
                         className="w-full p-2 border rounded-lg"
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
-                      Water (L)
-                    </label>
-                    <input
-                      type="number"
-                      name="water"
-                      value={userGoals.water}
-                      onChange={handleGoalChange}
-                      className="w-full p-2 border rounded-lg"
-                      step="0.1"
-                    />
                   </div>
                 </div>
               </div>
@@ -398,11 +464,9 @@ const HomeSummary = () => {
                     Nutrition Goals
                   </h4>
                   <ul className="space-y-1 text-sm">
-                    <li>• Calories: {userGoals.calories || "0"} kcal/day</li>
                     <li>• Protein: {userGoals.protein || "0"}g/day</li>
                     <li>• Carbs: {userGoals.carbs || "0"}g/day</li>
                     <li>• Fat: {userGoals.fat || "0"}g/day</li>
-                    <li>• Water: {userGoals.water || "0"}L/day</li>
                   </ul>
                 </div>
                 <div>
@@ -444,45 +508,22 @@ const HomeSummary = () => {
               Record your daily progress and metrics
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                {
-                  name: "weight",
-                  label: "Weight (kg)",
-                  placeholder: "Enter today's weight",
-                },
-                {
-                  name: "bmr",
-                  label: "BMR",
-                  placeholder: "Enter your BMR",
-                },
-                {
-                  name: "calories",
-                  label: "Calories Goal",
-                  placeholder: "Enter calorie goal",
-                },
-                {
-                  name: "tdee",
-                  label: "TDEE",
-                  placeholder: "Enter your TDEE",
-                },
-              ].map((item) => (
-                <div key={item.name}>
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    {item.label}
-                  </label>
-                  <input
-                    type="number"
-                    name={item.name}
-                    value={checkIn[item.name]}
-                    onChange={handleCheckInChange}
-                    className="w-full p-3 border rounded-lg"
-                    placeholder={item.placeholder}
-                    min="0"
-                    step={item.name === "weight" ? "0.1" : "1"}
-                  />
-                </div>
-              ))}
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Weight (kg)
+                </label>
+                <input
+                  type="number"
+                  name="weight"
+                  value={checkIn.weight}
+                  onChange={handleCheckInChange}
+                  className="w-full p-3 border rounded-lg"
+                  placeholder="Enter today's weight"
+                  min="0"
+                  step="0.1"
+                />
+              </div>
             </div>
 
             <div className="mt-8">
@@ -490,35 +531,26 @@ const HomeSummary = () => {
                 Today's Summary
               </h3>
               <div className="bg-gray-50 p-4 rounded-lg">
-                {checkIn.weight ||
-                checkIn.bmr ||
-                checkIn.calories ||
-                checkIn.tdee ? (
+                {checkIn.weight ? (
                   <ul className="space-y-2">
-                    {checkIn.weight && (
-                      <li>
-                        Weight:{" "}
-                        <strong>
-                          {Math.round(checkIn.weight * 10) / 10} kg
-                        </strong>
-                      </li>
-                    )}
-                    {checkIn.bmr && (
-                      <li>
-                        BMR: <strong>{Math.round(checkIn.bmr)}</strong>
-                      </li>
-                    )}
-                    {checkIn.calories && (
-                      <li>
-                        Calories Goal:{" "}
-                        <strong>{Math.round(checkIn.calories)}</strong>
-                      </li>
-                    )}
-                    {checkIn.tdee && (
-                      <li>
-                        TDEE: <strong>{Math.round(checkIn.tdee)}</strong>
-                      </li>
-                    )}
+                    <li>
+                      Weight:{" "}
+                      <strong>{Math.round(checkIn.weight * 10) / 10} kg</strong>
+                    </li>
+                    <li>
+                      BMR:{" "}
+                      <strong>{userData.bmr.toLocaleString()} kcal/day</strong>
+                    </li>
+                    <li>
+                      TDEE:{" "}
+                      <strong>{userData.tdee.toLocaleString()} kcal/day</strong>
+                    </li>
+                    <li>
+                      Calories Goal:{" "}
+                      <strong>
+                        {userData.caloriesGoal.toLocaleString()} kcal/day
+                      </strong>
+                    </li>
                   </ul>
                 ) : (
                   <p className="text-gray-500">No data entered yet</p>
@@ -545,11 +577,11 @@ const HomeSummary = () => {
                       >
                         <strong>{entry.date}:</strong>
                         {entry.weight &&
-                          ` Weight: ${Math.round(entry.weight * 10) / 10}kg |`}
-                        {entry.bmr && ` BMR: ${Math.round(entry.bmr)} |`}
-                        {entry.calories &&
-                          ` Calories: ${Math.round(entry.calories)} |`}
-                        {entry.tdee && ` TDEE: ${Math.round(entry.tdee)}`}
+                          ` Weight: ${Math.round(entry.weight * 10) / 10}kg`}
+                        {entry.bmr && `, BMR: ${entry.bmr}kcal`}
+                        {entry.tdee && `, TDEE: ${entry.tdee}kcal`}
+                        {entry.caloriesGoal &&
+                          `, Goal: ${entry.caloriesGoal}kcal`}
                       </li>
                     ))}
                   </ul>

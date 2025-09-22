@@ -9,7 +9,8 @@ const GainW = () => {
 
   const handleNext = () => {
     if (!weeklyGoal) return;
-    navigate("/signup/results", {
+    // Updated to use the correct route path
+    navigate("/signup/signup-final-form", {
       state: { ...location.state, weeklyGoal },
     });
   };

@@ -7,7 +7,8 @@ const Maintain = () => {
   const location = useLocation();
 
   const handleNext = () => {
-    navigate("/signup/results", {
+    // Updated to use the correct route path
+    navigate("/signup/signup-final-form", {
       state: { ...location.state, weeklyGoal: "Maintain" },
     });
   };

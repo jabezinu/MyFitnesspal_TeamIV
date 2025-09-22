@@ -13,7 +13,10 @@ const LossW = () => {
       return;
     }
 
-    navigate("/signup/results", { state: { ...location.state, weeklyGoal } });
+    // Updated to use the correct route path
+    navigate("/signup/signup-final-form", {
+      state: { ...location.state, weeklyGoal },
+    });
   };
 
   const handleBack = () => {

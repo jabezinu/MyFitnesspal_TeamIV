@@ -228,54 +228,69 @@ export default function LandingHero() {
         </div>
 
         {/* Text Content */}
-        <div className="flex-1 px-6 md:px-12 py-8 flex flex-col justify-center  text-[#1D2D44] space-y-4">
+        <div className="flex-1 px-4 md:px-8 py-6 flex flex-col justify-center text-[#1D2D44] space-y-4">
           <motion.h2
-            className="text-3xl md:text-4xl font-extrabold mb-2 leading-snug text-center md:text-left tracking-wide"
+            className="text-2xl md:text-3xl font-bold mb-2 leading-tight text-center md:text-left"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: [0, 1, 0.9, 1], y: [0, -5, 0] }}
             transition={{ duration: 5, repeat: Infinity }}
           >
-            Discover Your Meals <br /> & Plan Your Journey
+            Discover Your Perfect Meals <br className="hidden md:block" />& Plan
+            Your Journey
           </motion.h2>
 
           <motion.p
-            className="text-base md:text-lg  mt-24text-center md:text-left font-medium"
+            className="text-base md:text-lg text-gray-700 text-center md:text-left font-medium leading-relaxed"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: [0, 1, 0.9, 1], y: [0, -5, 0] }}
             transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
           >
             Track your calories and make consistent progress every day with our
-            smart tracker.
+            smart nutrition tracker.
           </motion.p>
 
           <motion.div
-            className="space-y-2 text-center md:text-left"
+            className="space-y-3 text-center md:text-left mt-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.9, 1] }}
             transition={{ duration: 5, repeat: Infinity, delay: 1 }}
           >
-            <p className="flex items-center gap-2 text-sm md:text-base">
-              <FaCheckCircle className="text-green-500" /> Set daily calorie
-              targets
-            </p>
-            <p className="flex items-center gap-2 text-sm md:text-base">
-              <FaCheckCircle className="text-green-500" /> Track meals and
-              workouts
-            </p>
-            <p className="flex items-center gap-2 text-sm md:text-base">
-              <FaCheckCircle className="text-green-500" /> Get recommended foods
-              to reach your goals
-            </p>
+            <div className="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+              <h3 className="font-bold text-blue-700 text-base mb-1">
+                Set Daily Calorie Targets
+              </h3>
+              <p className="text-gray-600 text-xs">
+                Personalized goals based on your body and objectives
+              </p>
+            </div>
+
+            <div className="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+              <h3 className="font-bold text-green-700 text-base mb-1">
+                Track Meals & Workouts
+              </h3>
+              <p className="text-gray-600 text-xs">
+                Comprehensive logging for complete nutrition awareness
+              </p>
+            </div>
+
+            <div className="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-500">
+              <h3 className="font-bold text-purple-700 text-base mb-1">
+                Get Food Recommendations
+              </h3>
+              <p className="text-gray-600 text-xs">
+                Smart suggestions tailored to your preferences and goals
+              </p>
+            </div>
           </motion.div>
 
           <motion.button
-            className="bg-[#1D2D44] text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-800 transition duration-300 self-center md:self-start mt-4 w-48 md:w-56"
+            className="bg-gradient-to-r from-[#1D2D44] to-[#3E5C76] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 self-center md:self-start mt-4 w-full md:w-48 text-base"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: [0, 1], scale: [0.8, 1] }}
             transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
             onClick={() => (window.location.href = "/signup")}
           >
-            Get Started
+            Start Your Journey
           </motion.button>
         </div>
       </section>
@@ -298,8 +313,8 @@ export default function LandingHero() {
             viewport={{ once: true }}
             transition={{ duration: 3, delay: 0.5 }} // increased duration
           >
-            Track your meals, discover recommended foods, and stay on top of
-            your health goals
+            Track your meals, discover foods, and stay on top of your health
+            goals
           </motion.p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -325,7 +340,7 @@ export default function LandingHero() {
                 />
                 <h3 className="text-lg font-semibold text-[#1D2D44] mb-2">
                   {index === 0 && "Log Your Meals"}
-                  {index === 1 && "Personalized Food Recommendations"}
+                  {index === 1 && "Personalized Food "}
                   {index === 2 && "Track Your Progress"}
                 </h3>
                 <p className="text-gray-500 text-sm">
@@ -358,46 +373,186 @@ export default function LandingHero() {
           }}
         />
         {/* What We Stand For Section */}
-        <section
-          id="about"
-          className="relative z-10 py-32 px-6 min-h-[120vh] pb-40 bg-[#1D2D44]"
-        >
-          <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
-            {/* Images with floating animation */}
-            <div className="flex justify-center items-end w-full md:w-1/2 gap-10">
-              {[five1, five2, five3].map((img, index) => (
-                <div
-                  key={index}
-                  className="w-1/3 rounded-2xl overflow-hidden shadow-xl animate-float"
-                  style={{
-                    height: index === 1 ? "350" : "300px",
-                    animationDelay: `${index * 0.5}s`,
-                  }}
-                >
-                  <img
-                    src={img}
-                    alt={`Five ${index + 1}`}
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
-                </div>
-              ))}
+        <section id="about" className="relative z-10 py-16 px-6 bg-[#1D2D44]">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4 relative inline-block">
+                What We Stand For
+                <span className="absolute left-1/2 -bottom-3 w-24 h-1 bg-green-400 rounded-full transform -translate-x-1/2"></span>
+              </h2>
+              <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+                Our core principles guide everything we do, helping you build
+                sustainable health through awareness and community.
+              </p>
             </div>
 
-            {/* Text Content with fade-up animation */}
-            <div className="flex-1 text-left text-white space-y-4 animate-fade-up">
-              <h2 className="text-4xl md:text-5xl font-bold mb-12">
-                What We Stand For
-              </h2>
-              <p className="text-sm md:text-base font-normal text-justify ">
-                Every change starts with awareness. At CalLog, we believe that
-                understanding your nutrition is the foundation of lasting
-                health. Tracking your calories helps you make smarter choices
-                and move closer to your goals. <br />
-                We’re not here for quick fixes. We focus on steady, meaningful
-                progress. Each log you make is a step forward, helping you
-                understand your body’s needs and empowering you to live your
-                healthiest life.
-              </p>
+            <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+              {/* Image Gallery - Horizontal Layout */}
+              <div className="w-full lg:w-2/5">
+                <div className="flex justify-center gap-4 md:gap-6">
+                  <div
+                    className="flex-1 rounded-2xl overflow-hidden shadow-lg h-64 md:h-72 animate-float"
+                    style={{ animationDelay: "0s" }}
+                  >
+                    <img
+                      src={five1}
+                      alt="Nutrition awareness"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div
+                    className="flex-1 rounded-2xl overflow-hidden shadow-lg h-72 md:h-72 animate-float"
+                    style={{ animationDelay: "0.3s" }}
+                  >
+                    <img
+                      src={five2}
+                      alt="Community support"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div
+                    className="flex-1 rounded-2xl overflow-hidden shadow-lg h-64 md:h-72 animate-float"
+                    style={{ animationDelay: "0.6s" }}
+                  >
+                    <img
+                      src={five3}
+                      alt="Healthy progress"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Mini Indicators for small screens */}
+                <div className="flex justify-center mt-4 lg:hidden">
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Principles Cards */}
+              <div className="w-full lg:w-3/5">
+                <div className="grid md:grid-cols-2 gap-5">
+                  {/* Card 1 */}
+                  <div className="bg-[#2A3A50] rounded-xl p-5 border-l-4 border-green-400 transition-all hover:translate-y-[-5px]">
+                    <div className="flex items-start mb-3">
+                      <div className="bg-green-400/20 p-2 rounded-lg mr-3">
+                        <svg
+                          className="w-5 h-5 text-green-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-green-400 font-semibold text-sm">
+                        Awareness First
+                      </h3>
+                    </div>
+                    <p className="text-gray-300 text-xs leading-relaxed">
+                      Understanding your nutrition is the essential foundation
+                      for lasting health. Every successful journey begins with
+                      knowing exactly where you stand today.
+                    </p>
+                  </div>
+
+                  {/* Card 2 */}
+                  <div className="bg-[#2A3A50] rounded-xl p-5 border-l-4 border-blue-400 transition-all hover:translate-y-[-5px]">
+                    <div className="flex items-start mb-3">
+                      <div className="bg-blue-400/20 p-2 rounded-lg mr-3">
+                        <svg
+                          className="w-5 h-5 text-blue-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                          ></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-blue-400 font-semibold text-sm">
+                        Progress Over Perfection
+                      </h3>
+                    </div>
+                    <p className="text-gray-300 text-xs leading-relaxed">
+                      We reject quick fixes in favor of steady, meaningful
+                      improvements that actually stick. Small consistent steps
+                      lead to transformative results over time.
+                    </p>
+                  </div>
+
+                  {/* Card 3 */}
+                  <div className="bg-[#2A3A50] rounded-xl p-5 border-l-4 border-purple-400 transition-all hover:translate-y-[-5px]">
+                    <div className="flex items-start mb-3">
+                      <div className="bg-purple-400/20 p-2 rounded-lg mr-3">
+                        <svg
+                          className="w-5 h-5 text-purple-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-purple-400 font-semibold text-sm">
+                        Community Matters
+                      </h3>
+                    </div>
+                    <p className="text-gray-300 text-xs leading-relaxed">
+                      Connecting with others who share your journey provides
+                      invaluable motivation. We celebrate milestones together
+                      and find strength in our collective growth.
+                    </p>
+                  </div>
+
+                  {/* Card 4 */}
+                  <div className="bg-[#2A3A50] rounded-xl p-5 border-l-4 border-yellow-400 transition-all hover:translate-y-[-5px]">
+                    <div className="flex items-start mb-3">
+                      <div className="bg-yellow-400/20 p-2 rounded-lg mr-3">
+                        <svg
+                          className="w-5 h-5 text-yellow-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-yellow-400 font-semibold text-sm">
+                        Sustainable Results
+                      </h3>
+                    </div>
+                    <p className="text-gray-300 text-xs leading-relaxed">
+                      We focus on building habits that become natural parts of
+                      your lifestyle. True transformation happens when healthy
+                      choices stop feeling like effort.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -405,18 +560,10 @@ export default function LandingHero() {
           <style>{`
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
+      50% { transform: translateY(-10px); }
     }
     .animate-float {
-      animation: float 12s ease-in-out infinite;
-    }
-
-    @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-up {
-      animation: fadeUp 3s ease-out forwards;
+      animation: float 8s ease-in-out infinite;
     }
   `}</style>
         </section>

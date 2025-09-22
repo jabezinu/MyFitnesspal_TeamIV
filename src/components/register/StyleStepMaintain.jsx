@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import calLogLogo from "../assets/img/calLogLogo.png";
+import calLogLogo from "../../assets/img/calLogLogo.png";
 
-const StyleStepGain = () => {
+const StyleStepMaintain = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const { firstName, lastName, goal, barriers } = location.state || {};
 
   useEffect(() => {
@@ -15,7 +16,7 @@ const StyleStepGain = () => {
   }, [firstName, lastName, goal, navigate]);
 
   const handleBack = () => {
-    navigate("/signup/barriers-gain", {
+    navigate("/signup/barriers-maintain", {
       state: { firstName, lastName, goal, barriers },
     });
   };
@@ -54,23 +55,21 @@ const StyleStepGain = () => {
             ))}
         </div>
 
-        
+        {/* Title */}
         <h2 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-          We understand. Life can sometimes make it hard to focus on your health
-          goals.
+          Staying consistent is key to maintaining your weight.
         </h2>
 
-        
+        {/* Paragraphs */}
         <p className="text-sm text-gray-600 mb-4 text-center">
-          That’s why we’re here to help you navigate challenges and stay on
-          track. We’ve guided countless people toward achieving their wellness
-          dreams.
+          Life can throw challenges your way, but we’ll help you navigate them.
         </p>
         <p className="text-sm text-gray-600 mb-8 text-center">
-          Let’s dive into the details so we can create your personalized plan.
+          Let’s dive into the details so we can create a personalized plan that
+          works for you.
         </p>
 
-      
+        {/* Buttons */}
         <div className="flex gap-4 justify-center">
           <button
             onClick={handleBack}
@@ -90,4 +89,4 @@ const StyleStepGain = () => {
   );
 };
 
-export default StyleStepGain;
+export default StyleStepMaintain;

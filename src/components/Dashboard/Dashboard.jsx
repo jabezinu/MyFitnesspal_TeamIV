@@ -38,23 +38,168 @@ const Dashboard = () => {
   const { waterIntake, waterGoal, logWater, isGoalAchieved, resetWater } =
     useWaterTracking();
 
-  // Get data from localStorage (saved from ResultsPage)
+  // Get data from localStorage (saved from CreateUsername)
   const [userData, setUserData] = useState({
     bmr: 0,
     caloriesGoal: 0,
     tdee: 0,
+    profile: {
+      height_cm: 0,
+      current_weight_kg: 0,
+      goal_weight_kg: 0,
+      sex: "",
+      dob: "",
+      fitness_goal: "",
+      activity_level: "",
+      dietary_preferences: "",
+      allergies: "",
+      medical_conditions: "",
+      fitness_experience: "",
+      username: "",
+      email: "",
+    },
   });
+
+  // Calculate age from birthDate (same as CreateUsername)
+  const calculateAge = (dob) => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
+  // Calculate BMR (Basal Metabolic Rate) using Mifflin-St Jeor Equation (same as CreateUsername)
+  const calculateBMR = (weight, height, age, gender) => {
+    if (weight <= 0 || height <= 0 || age <= 0) return 0;
+
+    if (gender === "male") {
+      return 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+      return 10 * weight + 6.25 * height - 5 * age - 161;
+    }
+  };
+
+  // Calculate TDEE (Total Daily Energy Expenditure) based on activity level (same as CreateUsername)
+  const calculateTDEE = (bmr, activityLevel) => {
+    const activityMultipliers = {
+      sedentary: 1.2, // Little to no exercise
+      light: 1.375, // Light exercise 1-3 days/week
+      moderate: 1.55, // Moderate exercise 3-5 days/week
+      active: 1.725, // Hard exercise 6-7 days/week
+      very_active: 1.9, // Very hard exercise, physical job
+    };
+
+    return bmr * (activityMultipliers[activityLevel] || 1.55);
+  };
+
+  // Calculate suggested calorie goal based on weight goal (same as CreateUsername)
+  const calculateCalorieGoal = (tdee, currentWeight, goalWeight) => {
+    if (goalWeight <= 0 || currentWeight <= 0) return Math.round(tdee);
+
+    const weightDifference = currentWeight - goalWeight;
+
+    if (Math.abs(weightDifference) < 0.5) {
+      // Maintain weight
+      return Math.round(tdee);
+    } else if (weightDifference > 0) {
+      // Lose weight (deficit of 500 calories/day ≈ 0.5kg/week)
+      return Math.round(tdee - 500);
+    } else {
+      // Gain weight (surplus of 500 calories/day ≈ 0.5kg/week)
+      return Math.round(tdee + 500);
+    }
+  };
+
+  // Recalculate metrics based on user data
+  const recalculateMetrics = (userProfile) => {
+    const {
+      sex,
+      dob,
+      height_cm,
+      current_weight_kg,
+      goal_weight_kg,
+      activity_level,
+    } = userProfile;
+
+    // Calculate age
+    const age = calculateAge(dob);
+
+    // Calculate health metrics using the same formulas as CreateUsername
+    const bmr = calculateBMR(current_weight_kg, height_cm, age, sex);
+    const tdee = calculateTDEE(bmr, activity_level);
+    const caloriesGoal = calculateCalorieGoal(
+      tdee,
+      current_weight_kg,
+      goal_weight_kg
+    );
+
+    return {
+      bmr: Math.round(bmr),
+      tdee: Math.round(tdee),
+      caloriesGoal,
+      age,
+    };
+  };
 
   useEffect(() => {
     // Load user data from localStorage
     const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
 
+    // If no user data, redirect to signup
+    if (!currentUser || Object.keys(currentUser).length === 0) {
+      navigate("/signup");
+      return;
+    }
+
+    // Extract data from the profile object where CreateUsername stores it
+    const profileData = currentUser.profile || {};
+
+    // Recalculate metrics to ensure consistency
+    const calculatedMetrics = recalculateMetrics(profileData);
+
     setUserData({
-      bmr: Math.round(currentUser.bmr) || 0,
-      caloriesGoal: Math.round(currentUser.caloriesGoal) || 0,
-      tdee: Math.round(currentUser.dailyCalories) || 0, // dailyCalories from ResultsPage is TDEE
+      ...calculatedMetrics,
+      profile: {
+        height_cm: profileData.height_cm || 0,
+        current_weight_kg: profileData.current_weight_kg || 0,
+        goal_weight_kg: profileData.goal_weight_kg || 0,
+        sex: profileData.sex || "",
+        dob: profileData.dob || "",
+        fitness_goal: profileData.fitness_goal || "",
+        activity_level: profileData.activity_level || "",
+        dietary_preferences: profileData.dietary_preferences || "",
+        allergies: profileData.allergies || "",
+        medical_conditions: profileData.medical_conditions || "",
+        fitness_experience: profileData.fitness_experience || "",
+        username: currentUser.username || profileData.username || "",
+        email: currentUser.email || profileData.email || "",
+      },
     });
-  }, []);
+  }, [navigate]);
+
+  // Convert kg to lbs for display
+  const kgToLbs = (kg) => Math.round(kg * 2.20462);
+
+  // Convert cm to feet and inches for display
+  const cmToFeetInches = (cm) => {
+    const totalInches = cm / 2.54;
+    const feet = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return { feet, inches };
+  };
+
+  const height = cmToFeetInches(userData.profile.height_cm);
+  const age = calculateAge(userData.profile.dob);
 
   // ---- Notifications State ----
   const [notificationCount, setNotificationCount] = useState(0);
@@ -151,7 +296,7 @@ const Dashboard = () => {
             >
               <div className="relative z-10">
                 <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400">
-                  Welcome!
+                  Welcome, {userData.profile.username || "User"}!
                 </h1>
                 <p className="mt-4 text-base md:text-lg text-white max-w-lg leading-relaxed">
                   Begin your fitness journey today.
@@ -237,7 +382,9 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Three Cards + Exercise Card Section - Original Layout */}
           <div className="flex flex-col md:flex-row gap-6">
+            {/* Three Cards Container */}
             <motion.div
               className="flex-1 bg-white rounded-3xl shadow-md flex justify-around items-center h-[250px] p-6 gap-4"
               initial={{ y: 50, opacity: 0 }}
@@ -248,7 +395,8 @@ const Dashboard = () => {
                 <MdOutlineFitnessCenter className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">BMR</p>
                 <p className="text-2xl font-bold">
-                  {userData.bmr.toLocaleString()} kcal/day
+                  {userData.bmr > 0 ? userData.bmr.toLocaleString() : "0"}{" "}
+                  kcal/day
                 </p>
               </div>
 
@@ -256,7 +404,10 @@ const Dashboard = () => {
                 <GiFire className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">Calories Goal</p>
                 <p className="text-2xl font-bold">
-                  {userData.caloriesGoal.toLocaleString()} kcal/day
+                  {userData.caloriesGoal > 0
+                    ? userData.caloriesGoal.toLocaleString()
+                    : "0"}{" "}
+                  kcal/day
                 </p>
               </div>
 
@@ -264,11 +415,13 @@ const Dashboard = () => {
                 <FaRunning className="text-5xl p-4 bg-[#1D2D44] text-white rounded-full" />
                 <p className="text-base font-semibold">TDEE</p>
                 <p className="text-2xl font-bold">
-                  {userData.tdee.toLocaleString()} kcal/day
+                  {userData.tdee > 0 ? userData.tdee.toLocaleString() : "0"}{" "}
+                  kcal/day
                 </p>
               </div>
             </motion.div>
 
+            {/* Exercise Card - Original Layout */}
             <motion.div
               className="flex-1 bg-gradient-to-r from-[#1D2D44] to-[#273554] text-white p-6 rounded-3xl shadow-md flex flex-col justify-between h-[250px]"
               initial={{ y: 50, opacity: 0 }}
@@ -297,8 +450,55 @@ const Dashboard = () => {
             </motion.div>
           </div>
 
+          {/* User Stats Section */}
+          {userData.profile.current_weight_kg > 0 && (
+            <motion.div
+              className="bg-white rounded-3xl shadow-md p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h3 className="text-xl font-bold text-[#1D2D44] mb-4">
+                Your Stats
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-blue-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-600">Current Weight</p>
+                  <p className="text-lg font-bold">
+                    {kgToLbs(userData.profile.current_weight_kg)} lbs
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    ({userData.profile.current_weight_kg.toFixed(1)} kg)
+                  </p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-600">Goal Weight</p>
+                  <p className="text-lg font-bold">
+                    {kgToLbs(userData.profile.goal_weight_kg)} lbs
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    ({userData.profile.goal_weight_kg.toFixed(1)} kg)
+                  </p>
+                </div>
+                <div className="bg-purple-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-600">Height</p>
+                  <p className="text-lg font-bold">
+                    {height.feet}'{height.inches}"
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    ({userData.profile.height_cm} cm)
+                  </p>
+                </div>
+                <div className="bg-amber-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-600">Age</p>
+                  <p className="text-lg font-bold">{age} years</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* Food Section Header */}
-          <div className="mb-8 text-center">
+          <div className="mb-8 text-center mt-12">
             <h2 className="text-4xl font-bold text-[#1D2D44]">
               Food & Calories
             </h2>

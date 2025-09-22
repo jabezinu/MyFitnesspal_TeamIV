@@ -23,6 +23,8 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [dataVersion, setDataVersion] = useState(0); // Add version state to force re-renders
 
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
@@ -36,28 +38,122 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
   ).length;
 
   useEffect(() => {
+    // Load user data from localStorage (from CreateUsername)
+    const loadUserData = () => {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+      setUserData(currentUser);
+    };
+
+    loadUserData();
+
     const storedMessages = JSON.parse(localStorage.getItem("messages") || "[]");
     setNotifications(storedMessages);
 
-    const handleStorageChange = () => {
-      const updatedMessages = JSON.parse(
-        localStorage.getItem("messages") || "[]"
-      );
-      setNotifications(updatedMessages);
+    // Listen for storage changes to update when data changes
+    const handleStorageChange = (e) => {
+      if (e.key === "currentUser") {
+        loadUserData();
+        setDataVersion((prev) => prev + 1); // Force re-render
+      }
+      if (e.key === "messages") {
+        const updatedMessages = JSON.parse(
+          localStorage.getItem("messages") || "[]"
+        );
+        setNotifications(updatedMessages);
+      }
     };
 
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+
+    // Also listen for custom event that can be triggered from other components
+    const handleUserDataUpdate = () => {
+      loadUserData();
+      setDataVersion((prev) => prev + 1);
+    };
+
+    window.addEventListener("userDataUpdated", handleUserDataUpdate);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("userDataUpdated", handleUserDataUpdate);
+    };
+  }, [dataVersion]); // Add dataVersion as dependency
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
     localStorage.removeItem("userProfile");
+    localStorage.removeItem("currentUser");
     navigate("/login");
   };
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  // Helper function to convert cm to feet and inches
+  const cmToFeetInches = (cm) => {
+    if (!cm || cm === 0) return { feet: 0, inches: 0 };
+    const totalInches = cm / 2.54;
+    const feet = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return { feet, inches };
+  };
+
+  // Helper function to convert kg to lbs
+  const kgToLbs = (kg) => {
+    if (!kg || kg === 0) return 0;
+    return Math.round(kg * 2.20462);
+  };
+
+  // Calculate age from date of birth
+  const calculateAge = (dob) => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
+  // Get profile data with fallbacks - prioritize data from CreateUsername
+  const profileData = {
+    name: userData
+      ? `${userData.first_name || ""} ${userData.last_name || ""}`.trim() ||
+        userData.username ||
+        "User"
+      : profile?.first_name && profile?.last_name
+      ? `${profile.first_name} ${profile.last_name}`
+      : profile?.username || "User",
+    gender: userData
+      ? userData.profile?.sex || ""
+      : profile?.profile?.sex || "",
+    age: userData
+      ? calculateAge(userData.profile?.dob)
+      : calculateAge(profile?.profile?.dob),
+    heightFt: userData
+      ? cmToFeetInches(userData.profile?.height_cm).feet
+      : profile?.profile?.height_cm
+      ? cmToFeetInches(profile.profile.height_cm).feet
+      : 0,
+    heightIn: userData
+      ? cmToFeetInches(userData.profile?.height_cm).inches
+      : profile?.profile?.height_cm
+      ? cmToFeetInches(profile.profile.height_cm).inches
+      : 0,
+    goalWeightLbs: userData
+      ? kgToLbs(userData.profile?.goal_weight_kg)
+      : profile?.profile?.goal_weight_kg
+      ? kgToLbs(profile.profile.goal_weight_kg)
+      : 0,
+    photo: profile?.photo || profile3,
   };
 
   const navigationItems = [
@@ -121,6 +217,7 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
                 className="p-2 rounded-full hover:bg-[#2a3c58] transition-colors relative"
                 onClick={() => navigate("/sendmail")}
                 aria-label="Notifications"
+                title="Messages"
               >
                 <FiBell className="text-xl" />
                 {notificationCount > 0 && (
@@ -139,14 +236,12 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
               >
                 <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
                   <img
-                    src={profile.photo || profile3}
-                    alt={profile.name || "User"}
+                    src={profileData.photo}
+                    alt={profileData.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="hidden md:inline">
-                  {profile.name || "User"}
-                </span>
+                <span className="hidden md:inline">{profileData.name}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -204,31 +299,32 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
             <div className="text-center mb-6 relative">
               <div className="w-20 h-20 mx-auto rounded-full p-1 bg-gradient-to-r from-[#1D2D44] to-[#FF6B6B] animate-pulse">
                 <img
-                  src={profile.photo || profile3}
-                  alt={profile.name || "User"}
+                  src={profileData.photo}
+                  alt={profileData.name}
                   className="w-full h-full rounded-full object-cover shadow-lg"
                 />
               </div>
 
               <h2 className="mt-2 text-xl font-extrabold text-[#1D2D44] truncate">
-                {profile.name || "User"}
+                {profileData.name}
               </h2>
 
               <p className="text-gray-500 mt-1 text-sm">
-                {profile.gender || "-"}, {profile.age || "-"} years
+                {profileData.gender || "-"}, {profileData.age || "-"} years
               </p>
 
               <div className="flex justify-center mt-4 gap-4">
                 <div className="bg-[#F0F4FF] p-3 rounded-2xl flex flex-col items-center w-20 shadow-md hover:scale-105 transform transition">
                   <p className="text-xs text-gray-500">HEIGHT</p>
                   <p className="font-semibold text-sm">
-                    {profile.heightFt || 0} ft {profile.heightIn || 0} in
+                    {profileData.heightFt || 0} ft {profileData.heightIn || 0}{" "}
+                    in
                   </p>
                 </div>
                 <div className="bg-[#FFF4E0] p-3 rounded-2xl flex flex-col items-center w-20 shadow-md hover:scale-105 transform transition">
-                  <p className="text-xs text-gray-500">WEIGHT</p>
+                  <p className="text-xs text-gray-500">GOAL WEIGHT</p>
                   <p className="font-semibold text-sm">
-                    {profile.weightLbs || 0} lbs
+                    {profileData.goalWeightLbs || 0} lbs
                   </p>
                 </div>
               </div>
@@ -241,8 +337,8 @@ const Layout = ({ children, showHeader = true, activeTab }) => {
             <div className="text-center mb-6 relative">
               <div className="w-12 h-12 mx-auto rounded-full p-1 bg-gradient-to-r from-[#1D2D44] to-[#FF6B6B] animate-pulse">
                 <img
-                  src={profile.photo || profile3}
-                  alt={profile.name || "User"}
+                  src={profileData.photo}
+                  alt={profileData.name}
                   className="w-full h-full rounded-full object-cover shadow-lg"
                 />
               </div>
