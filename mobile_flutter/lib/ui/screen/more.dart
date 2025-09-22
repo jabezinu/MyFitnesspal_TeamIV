@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
+import 'package:myfitnesspal/ui/screen/goals.dart';
 
 class More extends StatelessWidget {
   const More({super.key});
@@ -95,6 +96,11 @@ class More extends StatelessWidget {
                   ),
                   onTap: () {
                     // Navigate to settings screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const GoalsPage(),
+                      ),
+                    );
                   },
                 ),
                 ListTile(
