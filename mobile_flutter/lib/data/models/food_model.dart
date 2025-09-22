@@ -1,22 +1,20 @@
 class FoodModel {
   final int id;
   final String name;
-  final String category;
-  final double price;
+  final int calories_per_cup;
+  final int amount = 1;
 
   FoodModel({
     required this.id,
     required this.name,
-    required this.category,
-    required this.price,
+    required this.calories_per_cup,
   });
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
     return FoodModel(
       id: json['id'],
       name: json['name'],
-      category: json['category'],
-      price: (json['price'] as num).toDouble(),
+      calories_per_cup: json['calories_per_cup'],
     );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
 import 'package:myfitnesspal/data/logic/fetch_food.dart';
+import 'package:myfitnesspal/logic/diary_calory_cal/calory_cal_cubit.dart';
+import 'package:myfitnesspal/logic/diary_calory_cal/calory_cal_state.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Home extends StatefulWidget {
@@ -34,7 +37,7 @@ class _HomePage extends State<Home> {
           IconButton(
             onPressed: () async {
               FoodService foodsKey = FoodService();
-              List me = await foodsKey.getFoodKeywords();
+              List me = await foodsKey.loadFood();
 
               print(me);
             },
@@ -204,74 +207,83 @@ Widget _buildCaloriesCard() {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CircularPercentIndicator(
-                  lineWidth: 10,
-                  radius: 70,
-                  percent: 0.1,
-                  progressColor: Colors.blue,
-                  animateToInitialPercent: true,
-                  animation: true,
-                  restartAnimation: true,
-                  animationDuration: 600,
-                  center: Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "2419",
-                          style: TextStyle(
-                            color: appBackground(1),
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Remaining",
-                          style: TextStyle(color: appGrey(0.6)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Column(
-                  spacing: 5,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (var item in someData)
-                      Row(
-                        spacing: 15,
-                        children: [
-                          Icon(
-                            item["icon"],
-                            size: 20,
-                            color: const Color.fromARGB(255, 243, 33, 86),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+            BlocBuilder<CaloryCalCubit, CaloryCalState>(
+              builder:
+                  (context, state) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CircularPercentIndicator(
+                        lineWidth: 10,
+                        radius: 70,
+                        percent: (state.netCal / state.goal).clamp(0.0, 1.0),
+                        progressColor: Colors.blue,
+                        animateToInitialPercent: true,
+                        animation: true,
+                        restartAnimation: true,
+                        animationDuration: 600,
+                        center: Padding(
+                          padding: const EdgeInsets.only(top: 50.0),
+                          child: Column(
                             children: [
                               Text(
-                                item["label"],
-                                style: TextStyle(color: appGrey(0.6)),
-                              ),
-                              Text(
-                                "2520",
-                                textAlign: TextAlign.left,
+                                state.netCal.toStringAsFixed(0),
                                 style: TextStyle(
                                   color: appBackground(1),
-                                  fontSize: 16,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              Text(
+                                "Remaining",
+                                style: TextStyle(color: appGrey(0.6)),
+                              ),
                             ],
                           ),
+                        ),
+                      ),
+                      Column(
+                        spacing: 5,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var item in someData)
+                            Row(
+                              spacing: 15,
+                              children: [
+                                Icon(
+                                  item["icon"],
+                                  size: 20,
+                                  color: const Color.fromARGB(255, 243, 33, 86),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item["label"],
+                                      style: TextStyle(color: appGrey(0.6)),
+                                    ),
+                                    Text(
+                                      [
+                                        state.goal,
+                                        state.foodCal,
+                                        state.exerciseCal,
+                                      ][someData.indexOf(
+                                        item,
+                                      )].toStringAsFixed(0),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: appBackground(1),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ],
                       ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
             ),
           ],
         ),

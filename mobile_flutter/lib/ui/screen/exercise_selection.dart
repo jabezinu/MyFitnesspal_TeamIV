@@ -91,7 +91,17 @@ Widget _biuldBrowseExercise(BuildContext context) {
       SizedBox(
         // color: Colors.amber,
         height: screenSize.height / 1.4,
-        child: ListView(children: [buildListShowingRow()]),
+        child: ListView(
+          children: [
+            // buildListShowingRow(
+            //   context,
+            //   "LLL",
+            //   "shiero wat",
+            //   "72 cal",
+            //   "1.0 cup",
+            // ),
+          ],
+        ),
       ),
     ],
   );

@@ -9,10 +9,10 @@ class FoodService {
       'assets/data/search.pl.json',
     );
     // Decode JSON
-    final List<dynamic> data = json.decode(response);
+    final data = json.decode(response);
 
     // Convert to list of Food
-    return data.map((item) => FoodModel.fromJson(item)).toList();
+    return data["foods"].map((item) => FoodModel.fromJson(item)).toList();
   }
 
   Future<List> getFoodKeywords() async {
@@ -22,7 +22,7 @@ class FoodService {
     final data = json.decode(response); // This is a Map
 
     // Extract only the list under "keywords"
-    final List<dynamic> keywords = data["products"][0]["_keywords"];
+    final List<dynamic> keywords = data["keywords"];
 
     return keywords;
   }

@@ -3,34 +3,22 @@ import 'package:myfitnesspal/logic/diary_items/diary_items_event.dart';
 import 'package:myfitnesspal/logic/diary_items/diary_items_state.dart';
 
 Map<String, Map<String, dynamic>> item = {
-  'Breakfast': {
-    "kcal": 197.0,
-    "food": [
-      {"name": "Shiro Wat", "kcal": 197.0, "amount": 1.0},
+  'Breakfast': {"kcal": 0.0, "food": [
     ],
   },
-  'Lunch': {
-    "kcal": 198.0,
-    "food": [
-      {"name": "Egg", "kcal": 198.0, "amount": 1.0},
+  'Lunch': {"kcal": 0.0, "food": [
     ],
   },
-  'Dinner': {
-    "kcal": 197.0,
-    "food": [
-      {"name": "Shiro Wat", "kcal": 197.0, "amount": 1.0},
+  'Dinner': {"kcal": 0.0, "food": [
     ],
   },
-  'Snacks': {
-    "kcal": 197.0,
-    "food": [
-      {"name": "Shiro Wat", "kcal": 197.0, "amount": 1.0},
+  'Snacks': {"kcal": 0.0, "food": [
     ],
   },
   'Exercise': {
-    "kcal": 197.0,
+    "kcal": 0.0,
     "food": [
-      {"name": "Running", "kcal": 197.0, "amount": 1.0}, // amount = time
+      // {"name": "Running", "kcal": 197.0, "amount": 1.0}, // amount = time
     ],
   },
 };
@@ -46,9 +34,13 @@ class DiaryItemsBloc extends Bloc<DiaryItemsEvent, DiaryItemsState> {
       );
 
       final foodList = List<Map<String, dynamic>>.from(itemTypeMap["food"]);
-      foodList.add({"name": event.itemName, "kcal": event.kcal});
+      foodList.add({
+        "name": event.itemName,
+        "kcal": event.kcal,
+        "amount": event.amount,
+      });
 
-      final updatedKcal = (itemTypeMap["kcal"] as int) + event.kcal;
+      final updatedKcal = itemTypeMap["kcal"] + event.kcal;
 
       itemTypeMap["food"] = foodList;
       itemTypeMap["kcal"] = updatedKcal;
@@ -56,6 +48,7 @@ class DiaryItemsBloc extends Bloc<DiaryItemsEvent, DiaryItemsState> {
       updatedDiary[event.itemType] = itemTypeMap;
 
       emit(DiaryItemsState(updatedDiary));
+      // Bloc
     });
   }
 }

@@ -8,11 +8,13 @@ class ItemAddedToDiary extends DiaryItemsEvent {
   final String itemType; // Breakfast, Lunch, Dinner, Snacks, Exercise
   final String itemName; // Name of the food or exercise item
   final double kcal;
+  final double amount;
 
   const ItemAddedToDiary({
     required this.itemType,
     required this.itemName,
     required this.kcal,
+    this.amount = 1.0,
   });
 
   @override

@@ -4,10 +4,12 @@ import 'package:myfitnesspal/data/models/food_model.dart';
 
 class FoodRepository {
   Future<List<FoodModel>> loadFoods() async {
-    final String response = await rootBundle.loadString('assets/food.json');
+    final String response = await rootBundle.loadString(
+      'assets/data/search.pl.json',
+    );
     final data = json.decode(response);
 
-    final List<dynamic> keywords = data["keywords"];
-    return keywords.map((item) => FoodModel.fromJson(item)).toList();
+    final List<dynamic> foods = data["foods"];
+    return foods.map((item) => FoodModel.fromJson(item)).toList();
   }
 }

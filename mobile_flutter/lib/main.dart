@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myfitnesspal/logic/diary_calory_cal/calory_cal_cubit.dart';
 import 'package:myfitnesspal/logic/diary_items/diary_items_bloc.dart';
+import 'package:myfitnesspal/logic/food_logic/food_bloc.dart';
 import 'package:myfitnesspal/logic/main_page_nav/main_page_nav_cubit.dart';
 import 'package:myfitnesspal/logic/water_logging/water_logging_cubit.dart';
 import 'package:myfitnesspal/router/app_router.dart';
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => MainPageNavCubit()),
         BlocProvider(create: (context) => WaterLoggingCubit()),
         BlocProvider(create: (context) => DiaryItemsBloc()),
+        BlocProvider(create: (context) => CaloryCalCubit()),
       ],
       child: MaterialApp(debugShowCheckedModeBanner: false, routes: appRoute),
     );

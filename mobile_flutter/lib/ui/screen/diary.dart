@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myfitnesspal/constatnts/app_colors.dart';
+import 'package:myfitnesspal/logic/diary_calory_cal/calory_cal_cubit.dart';
+import 'package:myfitnesspal/logic/diary_calory_cal/calory_cal_state.dart';
 import 'package:myfitnesspal/logic/diary_items/diary_items_bloc.dart';
 import 'package:myfitnesspal/logic/diary_items/diary_items_state.dart';
 
@@ -11,7 +13,11 @@ class Diary extends StatelessWidget {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Diary"), backgroundColor: appWhite(1)),
+      appBar: AppBar(
+        title: Text("Diary"),
+        backgroundColor: appWhite(1),
+        leading: SizedBox(),
+      ),
       backgroundColor: appGrey(0.1),
       body: Column(
         spacing: 15,
@@ -91,91 +97,94 @@ class Diary extends StatelessWidget {
 
 Widget _BuildCaloryCal() {
   // this should lesten to both DiaryBloc and CaloryCalCubit
-  return AnimatedContainer(
-    duration: Duration(milliseconds: 300),
-    padding: EdgeInsets.all(10),
-    margin: EdgeInsets.symmetric(horizontal: 8),
-    decoration: BoxDecoration(
-      color: appWhite(1),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Column(
-      spacing: 16,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Calories Remaining",
-            style: TextStyle(color: appBackground(1), fontSize: 20),
+  return BlocBuilder<CaloryCalCubit, CaloryCalState>(
+    builder:
+        (context, state) => AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: appWhite(1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            spacing: 16,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Calories Remaining",
+                  style: TextStyle(color: appBackground(1), fontSize: 20),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        state.goal.toStringAsFixed(0),
+                        style: TextStyle(color: appBackground(1), fontSize: 20),
+                      ),
+                      Text("Goal"),
+                    ],
+                  ),
+                  Text(
+                    "-",
+                    style: TextStyle(
+                      color: appBackground(1),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        state.foodCal.toStringAsFixed(0),
+                        style: TextStyle(color: appBackground(1), fontSize: 20),
+                      ),
+                      Text("Food"),
+                    ],
+                  ),
+                  Text(
+                    "+",
+                    style: TextStyle(
+                      color: appBackground(1),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        state.exerciseCal.toStringAsFixed(0),
+                        style: TextStyle(color: appBackground(1), fontSize: 20),
+                      ),
+                      Text("Exercise"),
+                    ],
+                  ),
+                  Text(
+                    "=",
+                    style: TextStyle(
+                      color: appBackground(1),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        state.netCal.toStringAsFixed(0),
+                        style: TextStyle(color: appBackground(1), fontSize: 20),
+                      ),
+                      Text("Remaining"),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                Text(
-                  "2520",
-                  style: TextStyle(color: appBackground(1), fontSize: 20),
-                ),
-                Text("Goal"),
-              ],
-            ),
-            Text(
-              "-",
-              style: TextStyle(
-                color: appBackground(1),
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  "2000",
-                  style: TextStyle(color: appBackground(1), fontSize: 20),
-                ),
-                Text("Food"),
-              ],
-            ),
-            Text(
-              "+",
-              style: TextStyle(
-                color: appBackground(1),
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  "2000",
-                  style: TextStyle(color: appBackground(1), fontSize: 20),
-                ),
-                Text("Exercise"),
-              ],
-            ),
-            Text(
-              "=",
-              style: TextStyle(
-                color: appBackground(1),
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  "2000",
-                  style: TextStyle(color: appBackground(1), fontSize: 20),
-                ),
-                Text("Remaining"),
-              ],
-            ),
-          ],
-        ),
-      ],
-    ),
   );
 }
 
