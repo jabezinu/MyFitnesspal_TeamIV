@@ -31,7 +31,7 @@ class LandingPage extends StatelessWidget {
             Spacer(),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/main');
+                Navigator.pushNamed(context, '/fitness-flow');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: appBackground(0.71),
